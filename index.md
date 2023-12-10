@@ -12,6 +12,7 @@ Hello, my name is Travis and I love to play football. I have a mom, dad, brother
 - Video Games
 - Sports
 - Friends
+- Cats
 
 ![My cat with a football and football helmet]({{site.baseurl}}/images/catWithFootball.jpg)
 
