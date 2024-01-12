@@ -15,12 +15,13 @@ courses: { compsci: {week: 2} }
       result to take up the entirety of the first row;
       span defines 4 columns and 1 row
     */
-    grid-column: span 4;
+    grid-column: span 5;
     grid-row: span 1;
   
     padding: 0.25em;
     font-size: 20px;
-    border: 5px solid black;
+    border: 5px solid #000000;
+    background: #565656;
   
     display: flex;
     align-items: center;
@@ -43,7 +44,7 @@ courses: { compsci: {week: 2} }
       <div class="calculator-number">5</div>
       <div class="calculator-number">6</div>
       <div class="calculator-operation">-</div>
-      <div class="calculator-operation">x²</div>
+      <div class="calculator-operation">^</div>
       <!--row 3-->
       <div class="calculator-number">7</div>
       <div class="calculator-number">8</div>
@@ -135,6 +136,10 @@ courses: { compsci: {week: 2} }
           case "/":
               result = first / second;
               break;
+          case "^":
+              result = first ** second;
+          case "√":
+              result = Math.sqrt(first);
           default: 
               break;
       }

@@ -9,7 +9,7 @@
     width: auto;
     height: auto;
     border-radius: 10px;
-    background-color: #21807c;
+    background-color: #373737;
     border: 3px solid black;
     font-size: 1.5em;
 
@@ -31,7 +31,8 @@
 
    /* darkens the background color on hover to create a selecting effect */
   .button:hover {
-    background-color: #373737;
+    background-color: #e0e0e0;
+    color:#000000;
   }
 
   /* "row style" is flexible size and aligns pictures in center */
@@ -54,7 +55,7 @@
     margin: 0 auto;
   
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* fr is a special unit; learn more here: https://css-tricks.com/introduction-fr-css-unit/  */
+    grid-template-columns: repeat(5, 1fr); /* fr is a special unit; learn more here: https://css-tricks.com/introduction-fr-css-unit/  */
     grid-template-rows: 0.5fr repeat(4, 1fr);
     gap: 10px 10px;
   }
@@ -70,20 +71,33 @@
   .calculator-number {
     @extend .button;
   }
-
-  /* styling for the calculator operation button */
+  
+  /* styling for the calculator operation buttons */
   .calculator-operation {
     @extend .button;
+    background-color: #2e5408;
   }
-  
+  .calculator-operation:hover {
+    @extend .button;
+    background-color: #a6f458;
+  }
+
   /* styling for the calculator clear button */
   .calculator-clear {
+    @extend .button;
+    background-color: #94580f;
+  }
+  .calculator-clear:hover {
     @extend .button;
     background-color: #e68b1c;
   }
   
   /* styling for the calculator equals button */
   .calculator-equals {
+    @extend .button;
+    background-color: #840202;
+  }
+  .calculator-equals:hover {
     @extend .button;
     background-color: #e70f0f;
   }
