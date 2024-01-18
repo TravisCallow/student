@@ -138,8 +138,10 @@ courses: { compsci: {week: 2} }
               break;
           case "^":
               result = first ** second;
+              break;
           case "√":
-              result = Math.sqrt(first);
+              result = Math.sqrt(Number(output.innerHTML));
+              break;
           default: 
               break;
       }
@@ -158,6 +160,7 @@ courses: { compsci: {week: 2} }
       firstNumber = calculate(firstNumber, parseFloat(output.innerHTML));
       output.innerHTML = firstNumber.toString();
       nextReady = true;
+      firstNumber = null;
   }
 
   // Clear button listener
