@@ -17,7 +17,7 @@ courses: { compsci: {week: 4} }
 <body>
     <div>
         <canvas id="spriteContainer"> <!-- Within the base div is a canvas. An HTML canvas is used only for graphics. It allows the user to access some basic functions related to the image created on the canvas (including animation) -->
-            <img id="dogSprite" src="/teacher/images/dogSprites.png">  // change sprite here
+            <img id="samuraiSprite" src="/student/samuri_animations-Recovered.png/">  // change sprite here
         </canvas>
         <div id="controls"> <!--basic radio buttons which can be used to check whether each individual animaiton works -->
             <input type="radio" name="animation" id="idle" checked>
@@ -44,7 +44,7 @@ courses: { compsci: {week: 4} }
 
         class Dog {
             constructor() {
-                this.image = document.getElementById("dogSprite");
+                this.image = document.getElementById("samuraiSprite");
                 this.x = 0;
                 this.y = 0;
                 this.minFrame = 0;
