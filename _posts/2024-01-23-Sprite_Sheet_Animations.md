@@ -42,7 +42,7 @@ courses: { compsci: {week: 4} }
         canvas.width = SPRITE_WIDTH * SCALE_FACTOR;
         canvas.height = SPRITE_HEIGHT * SCALE_FACTOR;
 
-        class Dog {
+        class Samurai {
             constructor() {
                 this.image = document.getElementById("samuraiSprite");
                 this.x = 0;
@@ -53,7 +53,7 @@ courses: { compsci: {week: 4} }
                 this.frameY = 0;
             }
 
-            // draw dog object
+            // draw samurai object
             draw(context) {
                 context.drawImage(
                     this.image,
@@ -78,8 +78,8 @@ courses: { compsci: {week: 4} }
             }
         }
 
-        // dog object
-        const dog = new Dog();
+        // samurai object
+        const samurai = new Samurai();
 
         // update frameY of dog object, action from idle, bark, walk radio control
         const controls = document.getElementById('controls');
@@ -88,13 +88,13 @@ courses: { compsci: {week: 4} }
                 const selectedAnimation = event.target.id;
                 switch (selectedAnimation) {
                     case 'idle':
-                        dog.frameY = 0;
+                        samurai.frameY = 0;
                         break;
                     case 'barking':
-                        dog.frameY = 1;
+                        samurai.frameY = 1;
                         break;
                     case 'walking':
-                        dog.frameY = 2;
+                        samurai.frameY = 2;
                         break;
                     default:
                         break;
@@ -108,10 +108,10 @@ courses: { compsci: {week: 4} }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draws the current frame of the sprite.
-            dog.draw(ctx);
+            samurai.draw(ctx);
 
             // Updates the `frameX` property to prepare for the next frame in the sprite sheet.
-            dog.update();
+            samurai.update();
 
             // Uses `requestAnimationFrame` to synchronize the animation loop with the display's refresh rate,
             // ensuring smooth visuals.
