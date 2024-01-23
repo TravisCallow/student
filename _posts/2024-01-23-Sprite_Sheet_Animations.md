@@ -5,7 +5,7 @@ layout: post
 title: Sprite sheet animation
 description: Sprite sheet animation
 type: plans
-courses: { compsci: {week: 4} }
+courses: { compsci: {week: 5} }
 ---
 
 
@@ -17,15 +17,15 @@ courses: { compsci: {week: 4} }
 <body>
     <div>
         <canvas id="spriteContainer"> <!-- Within the base div is a canvas. An HTML canvas is used only for graphics. It allows the user to access some basic functions related to the image created on the canvas (including animation) -->
-            <img id="samuraiSprite" src="/student/samuri_animations-Recovered.png/">  // change sprite here
+            <img id="samuraiSprite" src="{{site.baseurl}}/images/samuri_animations-Recovered.png/">  // 
         </canvas>
         <div id="controls"> <!--basic radio buttons which can be used to check whether each individual animaiton works -->
             <input type="radio" name="animation" id="idle" checked>
             <label for="idle">Idle</label><br>
-            <input type="radio" name="animation" id="barking">
-            <label for="barking">Barking</label><br>
-            <input type="radio" name="animation" id="walking">
-            <label for="walking">Walking</label><br>
+            <input type="radio" name="animation" id="pulling out">
+            <label for="pulling out">Pulling out</label><br>
+            <input type="radio" name="animation" id="slicing">
+            <label for="slicing">Slicing</label><br>
         </div>
 </body>
 
@@ -34,9 +34,9 @@ courses: { compsci: {week: 4} }
     window.addEventListener('load', function () {
         const canvas = document.getElementById('spriteContainer');
         const ctx = canvas.getContext('2d');
-        const SPRITE_WIDTH = 128;  // matches sprite pixel width
-        const SPRITE_HEIGHT = 64; // matches sprite pixel height
-        const FRAME_LIMIT = 5;  // matches number of frames per sprite row, this code assume each row is same
+        const SPRITE_WIDTH = (768/6);  // matches sprite pixel width
+        const SPRITE_HEIGHT = (192/3); // matches sprite pixel height
+        const FRAME_LIMIT = 48;  // matches number of frames per sprite row, this code assume each row is same
 
         const SCALE_FACTOR = 2;  // control size of sprite on canvas
         canvas.width = SPRITE_WIDTH * SCALE_FACTOR;
@@ -81,7 +81,7 @@ courses: { compsci: {week: 4} }
         // samurai object
         const samurai = new Samurai();
 
-        // update frameY of samurai object, action from idle, bark, walk radio control
+        // update frameY of dog object, action from idle, bark, walk radio control
         const controls = document.getElementById('controls');
         controls.addEventListener('click', function (event) {
             if (event.target.tagName === 'INPUT') {
