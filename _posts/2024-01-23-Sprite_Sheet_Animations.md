@@ -34,8 +34,8 @@ courses: { compsci: {week: 4} }
     window.addEventListener('load', function () {
         const canvas = document.getElementById('spriteContainer');
         const ctx = canvas.getContext('2d');
-        const SPRITE_WIDTH = 160;  // matches sprite pixel width
-        const SPRITE_HEIGHT = 144; // matches sprite pixel height
+        const SPRITE_WIDTH = (768/6);  // matches sprite pixel width
+        const SPRITE_HEIGHT = (192/3); // matches sprite pixel height
         const FRAME_LIMIT = 48;  // matches number of frames per sprite row, this code assume each row is same
 
         const SCALE_FACTOR = 2;  // control size of sprite on canvas
