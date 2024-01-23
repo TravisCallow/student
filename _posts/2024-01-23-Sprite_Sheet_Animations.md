@@ -81,7 +81,7 @@ courses: { compsci: {week: 4} }
         // samurai object
         const samurai = new Samurai();
 
-        // update frameY of dog object, action from idle, bark, walk radio control
+        // update frameY of samurai object, action from idle, bark, walk radio control
         const controls = document.getElementById('controls');
         controls.addEventListener('click', function (event) {
             if (event.target.tagName === 'INPUT') {
