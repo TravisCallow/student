@@ -36,8 +36,6 @@ courses: { compsci: {week: 5} }
         const ctx = canvas.getContext('2d');
         const SPRITE_WIDTH = (768/6);  // matches sprite pixel width
         const SPRITE_HEIGHT = (192/3); // matches sprite pixel height
-        const FRAME_LIMIT = 6;  // matches number of frames per sprite row, this code assume each row is same
-
         const SCALE_FACTOR = 2;  // control size of sprite on canvas
         canvas.width = SPRITE_WIDTH * SCALE_FACTOR;
         canvas.height = SPRITE_HEIGHT * SCALE_FACTOR;
@@ -48,7 +46,7 @@ courses: { compsci: {week: 5} }
                 this.x = 0;
                 this.y = 0;
                 this.minFrame = 0;
-                this.maxFrame = FRAME_LIMIT;
+                this.maxFrame = 1;
                 this.frameX = 0;
                 this.frameY = 0;
             }
@@ -89,12 +87,15 @@ courses: { compsci: {week: 5} }
                 switch (selectedAnimation) {
                     case 'idle':
                         samurai.frameY = 0;
+                        samurai.maxFrame = 1;
                         break;
                     case 'pulling out':
                         samurai.frameY = 1;
+                        samurai.maxFrame = 4;
                         break;
                     case 'slicing':
                         samurai.frameY = 2;
+                        samurai.maxFrame = 5;
                         break;
                     default:
                         break;
