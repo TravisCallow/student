@@ -115,7 +115,7 @@ courses: { compsci: {week: 5} }
 
             // Uses `requestAnimationFrame` to synchronize the animation loop with the display's refresh rate,
             // ensuring smooth visuals.
-            requestAnimationFrame(animate);
+            setTimeout(()=>{requestAnimationFrame(animate);}, 250);
         }
 
         // run 1st animate
