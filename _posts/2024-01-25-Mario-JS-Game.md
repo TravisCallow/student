@@ -1,6 +1,6 @@
 ---
 toc: false
-comments: true
+comments: false
 layout: post
 title: Week 7 Mario Game
 description: A basic Mario level 
