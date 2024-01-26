@@ -185,26 +185,22 @@ courses: { compsci: {week: 7} }
         player.update();
         tube.draw();
         blockObject.draw();
+        //
+        //Collisions
+        collision(platform);
+        collision(blockObject);
         // Handle collisions and interactions
         // Handle collision between player and block object
-        if (
-            player.position.y + player.height <= blockObject.position.y &&
-            player.position.y + player.height + player.velocity.y >= blockObject.position.y &&
-            player.position.x + player.width >= blockObject.position.x &&
-            player.position.x <= blockObject.position.x + blockObject.width
-        )
-        {
-            player.velocity.y = 0;
-        }
-        // Handle collision between player and platform
-        if (
-            player.position.y + player.height <= platform.position.y &&
-            player.position.y + player.height + player.velocity.y >= platform.position.y &&
-            player.position.x + player.width >= platform.position.x &&
-            player.position.x <= platform.position.x + platform.width
-        )
-        {
-            player.velocity.y = 0;
+        function collision(funcObject){
+            if (
+                player.position.y + player.height <= funcObject.position.y &&
+                player.position.y + player.height + player.velocity.y >= funcObject.position.y &&
+                player.position.x + player.width >= funcObject.position.x &&
+                player.position.x <= funcObject.position.x + funcObject.width
+            )
+            {
+                player.velocity.y = 0;
+            }
         }
         // Handle interaction with tube
         if (
