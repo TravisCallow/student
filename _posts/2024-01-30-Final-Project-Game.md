@@ -188,11 +188,13 @@ courses: { compsci: {week: 7} }
         sword.update();
         platform.draw();
         //
-        //Move sword
-        if(facing == false){
-            sword.position = player.position - 5;
-        }else{
-            sword.position = player.position + 5;
+        //Move sword;
+        if(facing == true){
+            sword.position.y = player.position.y - 2;
+            sword.position.x = (player.position.x + player.width/2) + 15;
+        }else if(facing == false){
+            sword.position.y = player.position.y - 2;
+            sword.position.x = (player.position.x + player.width/2) - 15;
         }
         //Collisions
         collision(platform);
@@ -250,6 +252,7 @@ courses: { compsci: {week: 7} }
             case 65:
                 console.log('left');
                 keys.left.pressed = true;
+                facing = false;
                 break;
             case 83:
                 console.log('down');
@@ -257,6 +260,7 @@ courses: { compsci: {week: 7} }
             case 68:
                 console.log('right');
                 keys.right.pressed = true;
+                facing = true;
                 break;
             case 87:
                 console.log('up');
