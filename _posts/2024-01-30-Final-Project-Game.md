@@ -27,6 +27,8 @@ courses: { compsci: {week: 7} }
     canvas.height = 400;
     // Set gravity value
     let gravity = 1.5;
+    // Facing Value | true = right, false = left 
+    let facing = false;
     // Define the Player class
     class Player {
         constructor() {
@@ -58,6 +60,27 @@ courses: { compsci: {week: 7} }
                 this.velocity.y += gravity;
             else
                 this.velocity.y = 0;
+        }
+    }
+    //Make Sword
+    class Sword {
+        constructor(){
+            this.position = {
+                x: 100,
+                y: 200
+            };
+            // Dimensions of the sword
+            this.width = 5;
+            this.height = 35;
+        }
+         // Method to draw the player on the canvas
+        draw() {
+            c.fillStyle = 'purple';
+            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        }
+        // Method to update the player position and velocity
+        update() {
+            this.draw();
         }
     }
     // Define the Platform class
@@ -140,6 +163,7 @@ courses: { compsci: {week: 7} }
         }),
     ];
     player = new Player();
+    sword = new Sword();
     // Define keys and their states
     let keys = {
         right: {
@@ -161,8 +185,15 @@ courses: { compsci: {week: 7} }
         });
         // Draw platform, player, tube, and block object
         player.update();
+        sword.update();
         platform.draw();
         //
+        //Move sword
+        if(facing == false){
+            sword.position = player.position - 5;
+        }else{
+            sword.position = player.position + 5;
+        }
         //Collisions
         collision(platform);
         //collision(blockObject);
@@ -249,7 +280,7 @@ courses: { compsci: {week: 7} }
                 break;
             case 87:
                 console.log('up');
-                if(player.velocity.y == 0){player.velocity.y = -20;}
+                //if(player.velocity.y == 0){player.velocity.y = -20;}
                 break;
         }
     });
