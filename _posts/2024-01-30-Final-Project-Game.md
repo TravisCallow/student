@@ -29,6 +29,8 @@ courses: { compsci: {week: 7} }
     let gravity = 1.5;
     // Facing Value | true = right, false = left 
     let facing = false;
+    // Score
+    let score = 0;
     // Define the Player class
     class Player {
         constructor() {
@@ -83,6 +85,12 @@ courses: { compsci: {week: 7} }
             this.draw();
         }
     }
+    //Text
+    var ctx = canvas.getContext("2d");
+    // Set the font style
+    ctx.font = "20px Arial"; // You can customize the font size and type
+    // Set the text color
+    ctx.fillStyle = "black"; // You can customize the text color
     // Define the Platform class
     class Platform {
         constructor() {
@@ -196,6 +204,13 @@ courses: { compsci: {week: 7} }
             sword.position.y = player.position.y - 2;
             sword.position.x = (player.position.x + player.width/2) - 15;
         }
+        // Score
+        // Set the text content and position
+        var text = "Score: "+score;
+        var x = 50; // X-coordinate
+        var y = 50; // Y-coordinate
+        // Draw the text on the canvas
+        ctx.fillText(text, x, y);
         //Collisions
         collision(platform);
         //collision(blockObject);
