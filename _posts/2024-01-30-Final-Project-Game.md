@@ -241,13 +241,17 @@ courses: { compsci: {week: 7} }
         }
         //Player damage
         if(isColliding(player, enemy)){
+            const enemypos = (enemy.position.x + enemy.width/2);
+            const playerpos = (player.position.x + player.width/2);
             enemy.position.y = -500;
-            enemy.position.x = 500
+            enemy.position.x = 500;
             player.velocity.y = -22.5;
-            if(enemy.position.x > player.position.x){
+            if(enemypos > playerpos){
+                console.log("Contact Left");
                 player.velocity.x = -5;
-            }else{
+            }else if(enemypos <= playerpos){
                 player.velocity.x = 5;
+                console.log("Contact Right");
             }
             score--;
         }
@@ -304,7 +308,7 @@ courses: { compsci: {week: 7} }
         }
         else if (keys.left.pressed && player.position.x > 100) {
             player.velocity.x = -15;
-        }else if (player.velocity.y < 0 && player.position.x){
+        }else if (player.velocity.y < 0 && player.position.x < 500 && player.position.x > 100){
         }
         //--
         // NEW CODE - PARALLAX SCROLLING EFFECT (MAKE THE BACKGROUND MOVE TO CREATE ILLUSION OF PLAYER MOVING)
