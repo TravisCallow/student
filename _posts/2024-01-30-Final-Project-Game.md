@@ -31,6 +31,9 @@ courses: { compsci: {week: 7} }
     let facing = false;
     // Score
     let score = 0;
+    // Enemy Speed
+    let enemySpeed = 0.25;
+    let enemyCap = 3;
     // Define the Player class
     class Player {
         constructor() {
@@ -49,7 +52,7 @@ courses: { compsci: {week: 7} }
         }
         // Method to draw the player on the canvas
         draw() {
-            c.fillStyle = 'red';
+            c.fillStyle = 'yellow';
             c.fillRect(this.position.x, this.position.y, this.width, this.height);
         }
         // Method to update the player position and velocity
@@ -58,6 +61,38 @@ courses: { compsci: {week: 7} }
             this.position.y += this.velocity.y;
             this.position.x += this.velocity.x;
             // Apply gravity if player is not at the bottom
+            if (this.position.y + this.height + this.velocity.y <= canvas.height)
+                this.velocity.y += gravity;
+            else
+                this.velocity.y = 0;
+        }
+    }
+    class Enemy {
+        constructor() {
+            // Initial position and velocity of the enemy
+            this.position = {
+                x: 100,
+                y: 200
+            };
+            this.velocity = {
+                x: 0,
+                y: 0
+            };
+            // Dimensions of the enemy
+            this.width = 30;
+            this.height = 30;
+        }
+        // Method to draw the enemy on the canvas
+        draw() {
+            c.fillStyle = 'red';
+            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        }
+        // Method to update the enemy position and velocity
+        update() {
+            this.draw();
+            this.position.y += this.velocity.y;
+            this.position.x += this.velocity.x;
+            // Apply gravity if enemy is not at the bottom
             if (this.position.y + this.height + this.velocity.y <= canvas.height)
                 this.velocity.y += gravity;
             else
@@ -171,6 +206,7 @@ courses: { compsci: {week: 7} }
         }),
     ];
     player = new Player();
+    enemy = new Enemy();
     sword = new Sword();
     // Define keys and their states
     let keys = {
@@ -194,8 +230,27 @@ courses: { compsci: {week: 7} }
         // Draw platform, player, tube, and block object
         player.update();
         sword.update();
+        enemy.update();
         platform.draw();
         //
+        //Enemy AI
+        if((player.position.x + player.width/2) > (enemy.position.x + enemy.width/2) && enemy.velocity.x < enemyCap){
+            enemy.velocity.x += enemySpeed;
+        }if((player.position.x + player.width/2) < (enemy.position.x + enemy.width/2) && enemy.velocity.x >-enemyCap){
+            enemy.velocity.x -= enemySpeed;
+        }
+        //Player damage
+        if(isColliding(player, enemy)){
+            enemy.position.y = -500;
+            enemy.position.x = 500
+            player.velocity.y = -22.5;
+            if(enemy.position.x > player.position.x){
+                player.velocity.x = -5;
+            }else{
+                player.velocity.x = 5;
+            }
+            score--;
+        }
         //Move sword;
         if(facing == true){
             sword.position.y = player.position.y - 2;
@@ -212,20 +267,29 @@ courses: { compsci: {week: 7} }
         // Draw the text on the canvas
         ctx.fillText(text, x, y);
         //Collisions
-        collision(platform);
+        collision(platform, player);
+        collision(platform, enemy);
         //collision(blockObject);
         // Handle collisions and interactions
         // Handle collision between player and block object
-        function collision(funcObject){
+        function collision(funcObject, objectToCollide){
             if (
-                player.position.y + player.height <= funcObject.position.y &&
-                player.position.y + player.height + player.velocity.y >= funcObject.position.y &&
-                player.position.x + player.width >= funcObject.position.x &&
-                player.position.x <= funcObject.position.x + funcObject.width
+                objectToCollide.position.y + objectToCollide.height <= funcObject.position.y &&
+                objectToCollide.position.y + objectToCollide.height + objectToCollide.velocity.y >= funcObject.position.y &&
+                objectToCollide.position.x + objectToCollide.width >= funcObject.position.x &&
+                objectToCollide.position.x <= funcObject.position.x + funcObject.width
             )
             {
-                player.velocity.y = 0;
+                objectToCollide.velocity.y = 0;
             }
+        }
+        function isColliding(spriteA, spriteB) {
+            const collision =
+                spriteA.position.x < spriteB.position.x + spriteB.width &&
+                spriteA.position.x + spriteA.width > spriteB.position.x &&
+                spriteA.position.y < spriteB.position.y + spriteB.height &&
+                spriteA.position.y + spriteA.height > spriteB.position.y;
+            return collision;
         }
         //prevent form going too high
         if(
@@ -240,6 +304,7 @@ courses: { compsci: {week: 7} }
         }
         else if (keys.left.pressed && player.position.x > 100) {
             player.velocity.x = -15;
+        }else if (player.velocity.y < 0 && player.position.x){
         }
         //--
         // NEW CODE - PARALLAX SCROLLING EFFECT (MAKE THE BACKGROUND MOVE TO CREATE ILLUSION OF PLAYER MOVING)
@@ -281,6 +346,10 @@ courses: { compsci: {week: 7} }
                 console.log('up');
                 if(player.velocity.y == 0){player.velocity.y = -20;}
                 break;
+            case 32:
+                console.log('space');
+                score++;
+                break;
         }
     });
     // Event listener for key releases
@@ -289,12 +358,14 @@ courses: { compsci: {week: 7} }
             case 65:
                 console.log('left');
                 keys.left.pressed = false;
+                player.velocity.x = 0;
                 break;
             case 83:
                 console.log('down');
                 break;
             case 68:
                 console.log('right');
+                player.velocity.x = 0;
                 keys.right.pressed = false;
                 break;
             case 87:
