@@ -27,6 +27,7 @@ courses: { compsci: {week: 7} }
     // Set the canvas dimensions
     canvas.width = 650;
     canvas.height = 400;
+    canvas.style.webkitFilter = "blur(0.25px)";
     // Set gravity value
     let gravity = 1.5;
     // Facing Value | true = right, false = left
@@ -348,7 +349,7 @@ courses: { compsci: {week: 7} }
         c.roundRect(enemy.position.x + enemy.width/2 - 50/2, enemy.position.y - 10, 50, 7.5,5);
         c.stroke();
         c.fill();
-        c.fillStyle = "green";
+        c.fillStyle = "lime";
         c.beginPath();
         c.roundRect(enemy.position.x + enemy.width/2 - 50/2, enemy.position.y - 9, 48 * (enemyHealth/3), 5, 5);
         c.stroke();
