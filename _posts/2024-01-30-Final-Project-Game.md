@@ -31,6 +31,8 @@ courses: { compsci: {week: 7} }
     let facing = false;
     // Score
     let score = 0;
+    // Health
+    let lives = 3;
     // Enemy Speed
     let enemySpeed = 0.25;
     let enemyCap = 3;
@@ -71,7 +73,7 @@ courses: { compsci: {week: 7} }
         constructor() {
             // Initial position and velocity of the enemy
             this.position = {
-                x: 100,
+                x: 500,
                 y: 200
             };
             this.velocity = {
@@ -147,6 +149,27 @@ courses: { compsci: {week: 7} }
             this.draw()
         }
     }
+    //hearts
+    class Heart {
+        constructor() {
+            // Initial position of the platform
+            this.position = {
+                x: 0,
+                y: 0
+            }
+            //this.image = image;
+            this.width = 25;
+            this.height = 25;
+        }
+        // Method to draw the platform on the canvas
+        draw() {
+            c.fillStyle = 'red';
+            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        }
+        update() {
+            this.draw()
+        }
+    }
     // Define the Tube class
     // Define the BlockObject class
     class BlockObject {
@@ -208,6 +231,15 @@ courses: { compsci: {week: 7} }
     player = new Player();
     enemy = new Enemy();
     sword = new Sword();
+    heart1 = new Heart();
+    heart1.position.x = 500;
+    heart1.position.y = 40;
+    heart2 = new Heart();
+    heart2.position.x = 540;
+    heart2.position.y = 40;
+    heart3 = new Heart();
+    heart3.position.x = 580;
+    heart3.position.y = 40;
     // Define keys and their states
     let keys = {
         right: {
@@ -232,6 +264,9 @@ courses: { compsci: {week: 7} }
         sword.update();
         enemy.update();
         platform.draw();
+        heart1.update();
+        heart2.update();
+        heart3.update();
         //
         //Enemy AI
         if((player.position.x + player.width/2) > (enemy.position.x + enemy.width/2) && enemy.velocity.x < enemyCap){
@@ -246,14 +281,25 @@ courses: { compsci: {week: 7} }
             enemy.position.y = -500;
             enemy.position.x = 500;
             player.velocity.y = -22.5;
+            enemy.velocity.y = -20;
             if(enemypos > playerpos){
                 console.log("Contact Left");
                 player.velocity.x = -5;
+                enemy.velocity.x = 5
             }else if(enemypos <= playerpos){
                 player.velocity.x = 5;
+                enemy.velocity.x = -5
                 console.log("Contact Right");
             }
             score--;
+            if(lives == 3){
+                heart3.position.y = -45;
+            }else if (lives == 2){
+                heart2.position.y = -45
+            }else if (lives == 1){
+                heart1.position.y = -45;
+            }
+            lives--;
         }
         //Move sword;
         if(facing == true){
@@ -265,6 +311,7 @@ courses: { compsci: {week: 7} }
         }
         // Score
         // Set the text content and position
+        c.fillStyle = 'black';
         var text = "Score: "+score;
         var x = 50; // X-coordinate
         var y = 50; // Y-coordinate
