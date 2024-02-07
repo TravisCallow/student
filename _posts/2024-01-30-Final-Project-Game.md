@@ -471,7 +471,7 @@ courses: { compsci: {week: 7} }
                 break;
             case 32:
                 console.log('space');
-                if (facing == false && 0 < player.position.x + player.width/2 - enemy.position.x + enemy.width/2 < 100){ //left
+                if (facing == false && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 < 100 && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 > 0 ){ //left
                     enemy.velocity.y = -20;
                     enemy.velocity.x = -5;
                     enemyHealth--;
