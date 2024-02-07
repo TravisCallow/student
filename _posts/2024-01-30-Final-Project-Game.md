@@ -33,6 +33,9 @@ courses: { compsci: {week: 7} }
     let gamestarted = false;
     // Score
     let score = 0;
+    // Spawn Location
+    let pSpawnX = 100;
+    let pSpawnY = 200;
     // Health
     let lives = 3;
     // Enemy Speed
@@ -43,8 +46,8 @@ courses: { compsci: {week: 7} }
         constructor() {
             // Initial position and velocity of the player
             this.position = {
-                x: 100,
-                y: 200
+                x: pSpawnX,
+                y: pSpawnY
             };
             this.velocity = {
                 x: 0,
@@ -232,6 +235,7 @@ courses: { compsci: {week: 7} }
     ];
     player = new Player();
     enemy = new Enemy();
+    let enemyHealth = 3;
     sword = new Sword();
     heart1 = new Heart();
     heart1.position.x = 500;
@@ -264,6 +268,7 @@ courses: { compsci: {week: 7} }
             addEventListener('keydown', ({ keyCode }) => {
                 switch (keyCode) {
                     case 32:
+                        if(gamestarted == false){
                         console.log('space');
                         gamestarted = true;
                         heart1.position.x = 500;
@@ -272,9 +277,13 @@ courses: { compsci: {week: 7} }
                         heart2.position.y = 40;
                         heart3.position.x = 580;
                         heart3.position.y = 40;
+                        player.position.x = pSpawnX;
+                        player.position.y = pSpawnY;
                         lives = 3;
+                        enemyHealth = 3;
                         score = 0;
                         break;
+                        }
                 }
             });
         }
@@ -300,21 +309,25 @@ courses: { compsci: {week: 7} }
         }if((player.position.x + player.width/2) < (enemy.position.x + enemy.width/2) && enemy.velocity.x >-enemyCap){
             enemy.velocity.x -= enemySpeed;
         }
+        c.fillStyle = "gray";
+        c.fillRect(enemy.position.x, enemy.position.y - 10, 50, 7.5);
+        c.fillStyle = "green";
+        c.fillRect(enemy.position.x, enemy.position.y - 10, 48 * (enemyHealth/3), 5);
         //Player damage
         if(isColliding(player, enemy)){
             const enemypos = (enemy.position.x + enemy.width/2);
             const playerpos = (player.position.x + player.width/2);
-            enemy.position.y = -500;
-            enemy.position.x = 500;
+            //enemy.position.y = 200;
+            //enemy.position.x = 500;
             player.velocity.y = -22.5;
             enemy.velocity.y = -20;
             if(enemypos > playerpos){
                 console.log("Contact Left");
                 player.velocity.x = -5;
-                enemy.velocity.x = 5
+                enemy.velocity.x = 10;
             }else if(enemypos <= playerpos){
                 player.velocity.x = 5;
-                enemy.velocity.x = -5
+                enemy.velocity.x = -10;
                 console.log("Contact Right");
             }
             score--;
@@ -429,7 +442,29 @@ courses: { compsci: {week: 7} }
                 break;
             case 32:
                 console.log('space');
-                score++;
+                if (facing == false && 0 < player.position.x + player.width/2 - enemy.position.x + enemy.width/2 < 100){ //left
+                    enemy.velocity.y = -20;
+                    enemy.velocity.x = -5;
+                    enemyHealth--;
+                    console.log(player.position.x + player.width/2 - enemy.position.x + enemy.width/2);
+                    if(enemyHealth == 0){
+                        enemyHealth = 3;
+                        enemy.position.x = 500;
+                        enemy.position.y = 200;
+                        score++;
+                    }
+                }else if (facing == true && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 < 100){ //right
+                    enemy.velocity.y = -20;
+                    enemy.velocity.x = 5;
+                    enemyHealth--;
+                    console.log(enemy.position.x + enemy.width/2 - player.position.x + player.width/2);
+                    if(enemyHealth == 0){
+                        enemyHealth = 3;
+                        enemy.position.x = 500;
+                        enemy.position.y = 200;
+                        score++;
+                    }
+                }
                 break;
         }
     });
