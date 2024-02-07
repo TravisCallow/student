@@ -29,6 +29,8 @@ courses: { compsci: {week: 7} }
     let gravity = 1.5;
     // Facing Value | true = right, false = left 
     let facing = false;
+    // Game start
+    let gamestarted = false;
     // Score
     let score = 0;
     // Health
@@ -253,6 +255,22 @@ courses: { compsci: {week: 7} }
     function animate() {
         requestAnimationFrame(animate);
         c.clearRect(0, 0, canvas.width, canvas.height);
+        if(gamestarted == false){
+            c.fillStyle = 'black';
+            c.font = "30px monospace";
+            c.textAlign = "center";
+            c.fillText("Welcome To Alex and Travis' Game",canvas.width/2,100);
+            c.fillText("Press SPACE to continue",canvas.width/2,200);
+            addEventListener('keydown', ({ keyCode }) => {
+                switch (keyCode) {
+                    case 32:
+                        console.log('space');
+                        gamestarted = true;
+                        break;
+                }
+            });
+        }
+        else if(gamestarted == true){
         //--
         // NEW CODE - DRAW GENERIC OBJECTS WITH FOR EACH LOOP
         //--
@@ -312,6 +330,7 @@ courses: { compsci: {week: 7} }
         // Score
         // Set the text content and position
         c.fillStyle = 'black';
+        c.font = "20px monospace";
         var text = "Score: "+score;
         var x = 50; // X-coordinate
         var y = 50; // Y-coordinate
@@ -373,6 +392,7 @@ courses: { compsci: {week: 7} }
                     genericObject.position.x += 5;
                 });
             }
+        }
         }
     }
     // Start the animation loop
