@@ -501,7 +501,7 @@ courses: { compsci: {week: 7} }
                         enemy.position.y = 200;
                         score++;
                     }
-                }else if (facing == true && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 < 100 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //right
+                }else if (facing == true && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 < 100 && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //right
                     enemy.velocity.y = -20;
                     enemy.velocity.x = 5;
                     enemyHealth--;
