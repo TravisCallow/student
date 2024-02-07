@@ -266,6 +266,14 @@ courses: { compsci: {week: 7} }
                     case 32:
                         console.log('space');
                         gamestarted = true;
+                        heart1.position.x = 500;
+                        heart1.position.y = 40;
+                        heart2.position.x = 540;
+                        heart2.position.y = 40;
+                        heart3.position.x = 580;
+                        heart3.position.y = 40;
+                        lives = 3;
+                        score = 0;
                         break;
                 }
             });
@@ -316,6 +324,7 @@ courses: { compsci: {week: 7} }
                 heart2.position.y = -45
             }else if (lives == 1){
                 heart1.position.y = -45;
+                gamestarted = false;
             }
             lives--;
         }
@@ -330,6 +339,7 @@ courses: { compsci: {week: 7} }
         // Score
         // Set the text content and position
         c.fillStyle = 'black';
+        c.textAlign = 'left';
         c.font = "20px monospace";
         var text = "Score: "+score;
         var x = 50; // X-coordinate
