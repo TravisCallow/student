@@ -10,6 +10,8 @@ courses: { compsci: {week: 7} }
 
 
 
+
+
 <style>
     #canvas {
         margin: 0;
@@ -85,6 +87,7 @@ courses: { compsci: {week: 7} }
             this.draw();
         }
     }
+    // your_script.js
     // Define the Platform class
     class Platform {
         constructor() {
