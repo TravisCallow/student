@@ -66,6 +66,107 @@ courses: { compsci: {week: 7} }
                 this.velocity.y = 0;
         }
     }
+     // Define the Platform class
+    class Platform {
+        constructor(image) {
+            // Initial position of the platform
+            this.position = {
+                x: 0,
+                y: 300
+            }
+            this.image = image;
+            this.width = 650;
+            this.height = 100;
+        }
+        // Method to draw the platform on the canvas
+        draw() {
+            c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
+        }
+    }
+    // Define the Tube class
+    class Tube {
+        constructor(image) {
+            // Initial position of the tube
+            this.position = {
+                x: 500,
+                y: 180
+            }
+            this.image = image;
+            this.width = 100;
+            this.height = 120;
+        }
+        // Method to draw the tube on the canvas
+        draw() {
+            c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
+        }
+    }
+    // Define the BlockObject class
+    class BlockObject {
+        constructor(image) {
+            // Initial position of the block object
+            this.position = {
+                x: 200,
+                y: 100
+            };
+            this.image = image;
+            this.width = 158;
+            this.height = 79;
+        }
+        // Method to draw the block object on the canvas
+        draw() {
+            c.drawImage(this.image, this.position.x, this.position.y);
+        }
+    }
+    //--
+    // NEW CODE - CREATE GENERICOBJECT CLASS FOR THE BACKGROUND IMAGES
+    //--
+    class GenericObject {
+        constructor({ x, y, image }) {
+            this.position = {
+                x,
+                y
+            };
+            this.image = image;
+            this.width = 760;
+            this.height = 82;
+        }
+        // Method to draw the generic object on the canvas
+        draw() {
+            c.drawImage(this.image, this.position.x, this.position.y);
+        }
+    }
+    // Load image sources
+    let image = new Image();
+    let imageTube = new Image();
+    let imageBlock = new Image();
+    //--
+    // NEW CODE - ADD IMAGES FOR BACKGROUND
+    //--
+    let imageBackground = new Image();
+    let imageHills = new Image();
+    image.src = 'https://samayass.github.io/samayaCSA/images/platform.png';
+    imageTube.src = 'https://samayass.github.io/samayaCSA/images/tube.png';
+    imageBlock.src = 'https://samayass.github.io/samayaCSA/images/box.png';
+    //--
+    // NEW CODE - IMAGE URLS FOR BACKGROUND IMAGES
+    //--
+    imageBackground.src = 'https://samayass.github.io/samayaCSA/images/background.png';
+    imageHills.src = 'https://samayass.github.io/samayaCSA/images/hills.png';
+    // Create instances of platform, tube, block object, and generic objects
+    let platform = new Platform(image);
+    let tube = new Tube(imageTube);
+    let blockObject = new BlockObject(imageBlock);
+    //--
+    // NEW CODE - CREATE ARRAY FOR GENERIC OBJECTS THEN ADD THE HILLS AND BACKGROUND
+    //--
+    let genericObjects = [
+        new GenericObject({
+            x:0, y:0, image: imageBackground
+        }),
+        new GenericObject({
+            x:0, y:70, image: imageHills
+        }),
+    ];
     // Make Sword
     class Sword {
         constructor(){

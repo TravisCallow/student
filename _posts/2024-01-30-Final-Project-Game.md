@@ -110,6 +110,22 @@ courses: { compsci: {week: 7} }
         }
     }
     // Define the Tube class
+    class Tube {
+        constructor(image) {
+            // Initial position of the tube
+            this.position = {
+                x: 500,
+                y: 180
+            }
+            this.image = image;
+            this.width = 100;
+            this.height = 120;
+        }
+        // Method to draw the tube on the canvas
+        draw() {
+            c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
+        }
+    }
     // Define the BlockObject class
     class BlockObject {
         constructor(image) {
@@ -145,20 +161,28 @@ courses: { compsci: {week: 7} }
             c.drawImage(this.image, this.position.x, this.position.y);
         }
     }
-    // Load image sources
+        // Load image sources
+    let image = new Image();
+    let imageTube = new Image();
+    let imageBlock = new Image();
     //--
     // NEW CODE - ADD IMAGES FOR BACKGROUND
     //--
     let imageBackground = new Image();
-    let image = new Image();
+    let imageHills = new Image();
+    image.src = 'https://samayass.github.io/samayaCSA/images/platform.png';
+    imageTube.src = 'https://samayass.github.io/samayaCSA/images/tube.png';
+    imageBlock.src = 'https://samayass.github.io/samayaCSA/images/box.png';
     //--
     // NEW CODE - IMAGE URLS FOR BACKGROUND IMAGES
     //--
+    imageBackground.src = 'https://samayass.github.io/samayaCSA/images/background.png';
+    imageHills.src = 'https://samayass.github.io/samayaCSA/images/hills.png';
     // Create instances of platform, tube, block object, and generic objects
-    let platform = new Platform();
-    image.src = 'https://samayass.github.io/samayaCSA/images/platform.png';
-    //let tube = new Tube(imageTube);
-    //let blockObject = new BlockObject(imageBlock);
+    let platform = new Platform(image);
+    let tube = new Tube(imageTube);
+    let blockObject = new BlockObject(imageBlock);
+    let sword = new Sword();
     //--
     // NEW CODE - CREATE ARRAY FOR GENERIC OBJECTS THEN ADD THE HILLS AND BACKGROUND
     //--
@@ -166,9 +190,11 @@ courses: { compsci: {week: 7} }
         new GenericObject({
             x:0, y:0, image: imageBackground
         }),
+        new GenericObject({
+            x:0, y:70, image: imageHills
+        }),
     ];
     player = new Player();
-    sword = new Sword();
     // Define keys and their states
     let keys = {
         right: {
