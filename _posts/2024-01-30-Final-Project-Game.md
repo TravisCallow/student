@@ -94,11 +94,11 @@ courses: { compsci: {week: 7} }
             // Initial position of the platform
             this.position = {
                 x: 0,
-                y: 300
+                y: 360
             }
             //this.image = image;
             this.width = 650;
-            this.height = 100;
+            this.height = 40;
         }
         // Method to draw the platform on the canvas
         draw() {
@@ -177,7 +177,7 @@ courses: { compsci: {week: 7} }
     // NEW CODE - IMAGE URLS FOR BACKGROUND IMAGES
     //--
     imageBackground.src = 'https://samayass.github.io/samayaCSA/images/background.png';
-    imageHills.src = 'https://samayass.github.io/samayaCSA/images/hills.png';
+    imageHills.src = '{{site.baseurl}}/images/Sonic_hedgehog_background.png'
     // Create instances of platform, tube, block object, and generic objects
     let platform = new Platform(image);
     let tube = new Tube(imageTube);
@@ -191,7 +191,7 @@ courses: { compsci: {week: 7} }
             x:0, y:0, image: imageBackground
         }),
         new GenericObject({
-            x:0, y:70, image: imageHills
+            x:0, y:-150, image: imageHills
         }),
     ];
     player = new Player();
@@ -203,7 +203,7 @@ courses: { compsci: {week: 7} }
         left: {
             pressed: false
         }
-    };
+    }; 
     // Animation loop
     function animate() {
         requestAnimationFrame(animate);
@@ -321,4 +321,3 @@ courses: { compsci: {week: 7} }
                 break;
         }
     });
-</script>
