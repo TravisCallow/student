@@ -16,7 +16,7 @@ courses: { compsci: {week: 7} }
     #canvas {
         margin: 0;
         border: 1px solid white;
-        background: skyblue;
+        background: black;
     }
 </style>
 <canvas id="canvas"></canvas>
@@ -266,7 +266,7 @@ courses: { compsci: {week: 7} }
                 x:650, y:-150, image: imageHills
             }),
             new GenericObject({
-                x:-650, y:-150, image: imageHills
+                x:1300, y:-150, image: imageHills
             })  
         ];
      // Track current background index
@@ -313,15 +313,33 @@ heart3.position.y = 40;
             pressed: false
         }
     }; 
-   // Animation loop
+    // Define the boundaries of the game area
+const minX = 0;  // Minimum X coordinate
+const maxX = canvas.width;  // Maximum X coordinate based on canvas width
+const minY = 0;  // Minimum Y coordinate
+const maxY = canvas.height;  // Maximum Y coordinate based on canvas height
+// Function to check if the player is within the game boundaries
+function isPlayerWithinBoundaries(playerX, playerY) {
+    return playerX >= minX && playerX <= maxX && playerY >= minY && playerY <= maxY;
+}
+  // Animation loop
 function animate() {
     requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height);
     // Update background based on player position
     updateBackground(player.position.x);
+    // Check if player is within the game boundaries
+    if (!isPlayerWithinBoundaries(player.position.x, player.position.y)) {
+        // If player is outside the boundaries, prevent further movement
+        // For example, you could reset the player's position to stay within boundaries
+        player.position.x = Math.max(minX, Math.min(maxX, player.position.x));
+        player.position.y = Math.max(minY, Math.min(maxY, player.position.y));
+    }
     // Render game objects and handle game logic
     if (gamestarted == false) {
         // Handle game initialization or intro screen rendering
+        c.fillStyle = 'skyblue';
+        c.fillRect(0,0,canvas.width, canvas.height)
         c.fillStyle = 'black';
         c.font = "30px monospace";
         c.textAlign = "center";
@@ -349,7 +367,11 @@ function animate() {
             }
         });
     }
-        else if(gamestarted == true){
+    // Render game objects and handle game logic
+    // Include your game rendering and logic here
+}
+// Start the animation loop
+animate();
         //--
         // NEW CODE - DRAW GENERIC OBJECTS WITH FOR EACH LOOP
         //--
@@ -497,8 +519,6 @@ function animate() {
                 enemy.position.x += 5;
             }
         }
-        }
-    }
     // Start the animation loop
     animate();
     // Event listener for key presses
