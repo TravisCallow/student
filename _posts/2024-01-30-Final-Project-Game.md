@@ -254,27 +254,55 @@ courses: { compsci: {week: 7} }
     //--
     // NEW CODE - CREATE ARRAY FOR GENERIC OBJECTS THEN ADD THE HILLS AND BACKGROUND
     //--
-    let genericObjects = [
-        new GenericObject({
-            x:0, y:0, image: imageBackground
-        }),
-        new GenericObject({
-            x:0, y:-150, image: imageHills
-        }),
-    ];
-    player = new Player();
-    enemy = new Enemy();
-    let enemyHealth = 3;
-    sword = new Sword();
-    heart1 = new Heart();
-    heart1.position.x = 500;
-    heart1.position.y = 40;
-    heart2 = new Heart();
-    heart2.position.x = 540;
-    heart2.position.y = 40;
-    heart3 = new Heart();
-    heart3.position.x = 580;
-    heart3.position.y = 40;
+        let genericObjects = [
+            new GenericObject({
+                x:0, y:0, image: imageBackground
+            }),
+            new GenericObject({
+                x:0, y:-150, image: imageHills
+            }), 
+            new GenericObject({
+                x:650, y:-150, image: imageHills
+            }),
+            new GenericObject({
+                x:-650, y:-150, image: imageHills
+            })  
+        ];
+     // Track current background index
+let currentBackgroundIndex = 0; // Start with the first background
+// Function to update background based on player position
+function updateBackground(playerX) {
+    const numBackgrounds = genericObjects.length;
+    if (playerX < 0) {
+        // Move to the previous background
+        currentBackgroundIndex--;
+        if (currentBackgroundIndex < 0) {
+            currentBackgroundIndex = numBackgrounds - 1; // Wrap around to the last background
+        }
+        genericObjects[0].image = 'background' + (currentBackgroundIndex + 1) + '.jpg'; // Update background image
+    } else if (playerX > 650) { // Adjusted width for the game area
+    console.log('detect at edge')
+        currentBackgroundIndex++;
+        if (currentBackgroundIndex >= numBackgrounds) {
+            currentBackgroundIndex = 0; // Wrap around to the first background
+        }
+        genericObjects[0].image = '{{site.baseurl}}/images/Sonic_hedgehog_background.png';
+    }
+}
+// Instantiate other game objects
+player = new Player();
+enemy = new Enemy();
+let enemyHealth = 3;
+sword = new Sword();
+heart1 = new Heart();
+heart1.position.x = 500;
+heart1.position.y = 40;
+heart2 = new Heart();
+heart2.position.x = 540;
+heart2.position.y = 40;
+heart3 = new Heart();
+heart3.position.x = 580;
+heart3.position.y = 40;
     // Define keys and their states
     let keys = {
         right: {
@@ -284,20 +312,24 @@ courses: { compsci: {week: 7} }
             pressed: false
         }
     }; 
-    // Animation loop
-    function animate() {
-        requestAnimationFrame(animate);
-        c.clearRect(0, 0, canvas.width, canvas.height);
-        if(gamestarted == false){
-            c.fillStyle = 'black';
-            c.font = "30px monospace";
-            c.textAlign = "center";
-            c.fillText("Welcome To Alex and Travis' Game",canvas.width/2,100);
-            c.fillText("Press SPACE to continue",canvas.width/2,200);
-            addEventListener('keydown', ({ keyCode }) => {
-                switch (keyCode) {
-                    case 32:
-                        if(gamestarted == false){
+   // Animation loop
+function animate() {
+    requestAnimationFrame(animate);
+    c.clearRect(0, 0, canvas.width, canvas.height);
+    // Update background based on player position
+    updateBackground(player.position.x);
+    // Render game objects and handle game logic
+    if (gamestarted == false) {
+        // Handle game initialization or intro screen rendering
+        c.fillStyle = 'black';
+        c.font = "30px monospace";
+        c.textAlign = "center";
+        c.fillText("Welcome To Alex and Travis' Game", canvas.width/2, 100);
+        c.fillText("Press SPACE to continue", canvas.width/2, 200);
+        addEventListener('keydown', ({ keyCode }) => {
+            switch (keyCode) {
+                case 32:
+                    if (gamestarted == false) {
                         console.log('space');
                         gamestarted = true;
                         heart1.position.x = 500;
@@ -312,10 +344,10 @@ courses: { compsci: {week: 7} }
                         enemyHealth = 3;
                         score = 0;
                         break;
-                        }
-                }
-            });
-        }
+                    }
+            }
+        });
+    }
         else if(gamestarted == true){
         //--
         // NEW CODE - DRAW GENERIC OBJECTS WITH FOR EACH LOOP
