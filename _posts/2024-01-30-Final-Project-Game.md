@@ -24,9 +24,13 @@ courses: { compsci: {week: 7} }
     // Create empty canvas
     let canvas = document.getElementById('canvas');
     let c = canvas.getContext('2d');
+    let fullScreen = false;
     // Set the canvas dimensions
-    canvas.width = 650;
-    canvas.height = 400;
+    if(fullScreen == true){
+    }else{
+        canvas.width = 650;
+        canvas.height = 400;
+    }
     canvas.style.webkitFilter = "blur(0.25px)";
     // Set gravity value
     let gravity = 1.5;
@@ -264,8 +268,21 @@ courses: { compsci: {week: 7} }
         }),
     ];
     player = new Player();
-    enemy = new Enemy();
-    let enemyHealth = 3;
+    enemy1 = new Enemy();
+    let enemyHealth1 = 3;
+    enemy1.position.x = 1500;
+    enemy2 = new Enemy();
+    enemy2.position.x = 500;
+    let enemyHealth2 = 3;
+    enemy3 = new Enemy();
+    enemy3.position.x = 700;
+    let enemyHealth3 = 3;
+    enemy4 = new Enemy();
+    enemy4.position.x = 1000;
+    let enemyHealth4 = 3;
+    enemy5 = new Enemy();
+    enemy5.position.x = 1200;
+    let enemyHealth5 = 3;
     sword = new Sword();
     heart1 = new Heart();
     heart1.position.x = 500;
@@ -310,7 +327,11 @@ courses: { compsci: {week: 7} }
                         player.position.x = pSpawnX;
                         player.position.y = pSpawnY;
                         lives = 3;
-                        enemyHealth = 3;
+                        enemyHealth1 = 3;
+                        enemyHealth2 = 3;
+                        enemyHealth3 = 3;
+                        enemyHealth4 = 3;
+                        enemyHealth5 = 3;
                         score = 0;
                         break;
                         }
@@ -327,7 +348,11 @@ courses: { compsci: {week: 7} }
         // Draw platform, player, tube, and block object
         player.update();
         sword.update();
-        enemy.update();
+        enemy1.update();
+        enemy2.update();
+        enemy3.update();
+        enemy4.update();
+        enemy5.update();
         platform.draw();
         c.fillStyle = "#000000aa";
         c.beginPath();
@@ -339,48 +364,69 @@ courses: { compsci: {week: 7} }
         heart3.update();
         //
         //Enemy AI
-        if((player.position.x + player.width/2) > (enemy.position.x + enemy.width/2) && enemy.velocity.x < enemyCap){
-            enemy.velocity.x += enemySpeed;
-        }if((player.position.x + player.width/2) < (enemy.position.x + enemy.width/2) && enemy.velocity.x >-enemyCap){
-            enemy.velocity.x -= enemySpeed;
+        enemyAI(enemy1);
+        enemyAI(enemy2);
+        enemyAI(enemy3);
+        enemyAI(enemy4);
+        enemyAI(enemy5);
+        function enemyAI(enemy){
+            if((player.position.x + player.width/2) > (enemy.position.x + enemy.width/2) && enemy.velocity.x < enemyCap){
+                enemy.velocity.x += enemySpeed;
+            }if((player.position.x + player.width/2) < (enemy.position.x + enemy.width/2) && enemy.velocity.x >-enemyCap){
+                enemy.velocity.x -= enemySpeed;
+            }
         }
-        c.fillStyle = "#000000aa";
-        c.beginPath();
-        c.roundRect(enemy.position.x + enemy.width/2 - 50/2, enemy.position.y - 10, 50, 7.5,5);
-        c.stroke();
-        c.fill();
-        c.fillStyle = "lime";
-        c.beginPath();
-        c.roundRect(enemy.position.x + enemy.width/2 - 50/2, enemy.position.y - 9, 48 * (enemyHealth/3), 5, 5);
-        c.stroke();
-        c.fill();
+        enemyHealthBar(enemy1,enemyHealth1);
+        enemyHealthBar(enemy2,enemyHealth2);
+        enemyHealthBar(enemy3,enemyHealth3);
+        enemyHealthBar(enemy4,enemyHealth4);
+        enemyHealthBar(enemy5,enemyHealth5);
+        function enemyHealthBar(enemy,enemyHealth){
+            c.fillStyle = "#000000aa";
+            c.beginPath();
+            c.roundRect(enemy.position.x + enemy.width/2 - 50/2, enemy.position.y - 10, 50, 7.5,5);
+            c.stroke();
+            c.fill();
+            c.fillStyle = "lime";
+            c.beginPath();
+            c.roundRect(enemy.position.x + enemy.width/2 - 50/2, enemy.position.y - 9, 48 * (enemyHealth/3), 5, 5);
+            c.stroke();
+            c.fill();
+        }
         //Player damage
-        if(isColliding(player, enemy)){
-            const enemypos = (enemy.position.x + enemy.width/2);
-            const playerpos = (player.position.x + player.width/2);
-            //enemy.position.y = 200;
-            //enemy.position.x = 500;
-            player.velocity.y = -22.5;
-            enemy.velocity.y = -20;
-            if(enemypos > playerpos){
-                console.log("Contact Left");
-                player.velocity.x = -5;
-                enemy.velocity.x = 10;
-            }else if(enemypos <= playerpos){
-                player.velocity.x = 5;
-                enemy.velocity.x = -10;
-                console.log("Contact Right");
+        enemyCollision(enemy1);
+        enemyCollision(enemy2);
+        enemyCollision(enemy3);
+        enemyCollision(enemy4);
+        enemyCollision(enemy5);
+        function enemyCollision(enemy){
+            if(isColliding(player, enemy)){
+                const enemypos = (enemy.position.x + enemy.width/2);
+                const playerpos = (player.position.x + player.width/2);
+                //enemy.position.y = 200;
+                //enemy.position.x = 500;
+                player.velocity.y = -22.5;
+                enemy.velocity.y = -20;
+                if(enemypos > playerpos){
+                    console.log("Contact Left");
+                    player.velocity.x = -5;
+                    enemy.velocity.x = 10;
+                }else if(enemypos <= playerpos){
+                    player.velocity.x = 5;
+                    enemy.velocity.x = -10;
+                    console.log("Contact Right");
+                }
+                score--;
+                if(lives == 3){
+                    heart3.position.y = -45;
+                }else if (lives == 2){
+                    heart2.position.y = -45
+                }else if (lives == 1){
+                    heart1.position.y = -45;
+                    gamestarted = false;
+                }
+                lives--;
             }
-            score--;
-            if(lives == 3){
-                heart3.position.y = -45;
-            }else if (lives == 2){
-                heart2.position.y = -45
-            }else if (lives == 1){
-                heart1.position.y = -45;
-                gamestarted = false;
-            }
-            lives--;
         }
         //Move sword;
         if(facing == true){
@@ -407,7 +453,11 @@ courses: { compsci: {week: 7} }
         ctx.fillText(text, x, y);
         //Collisions
         collision(platform, player);
-        collision(platform, enemy);
+        collision(platform, enemy1);
+        collision(platform, enemy2);
+        collision(platform, enemy3);
+        collision(platform, enemy4);
+        collision(platform, enemy5);
         //collision(blockObject);
         //console.log(enemy.position);
         // Handle collisions and interactions
@@ -456,13 +506,21 @@ courses: { compsci: {week: 7} }
                 genericObjects.forEach(genericObject => {
                     genericObject.position.x -= 5;
                 });
-                enemy.position.x -= 5;
+                enemy1.position.x -= 5;
+                enemy2.position.x -= 5;
+                enemy3.position.x -= 5;
+                enemy4.position.x -= 5;
+                enemy5.position.x -= 5;
             }
             else if (keys.left.pressed && !keys.right.pressed) {
                 genericObjects.forEach(genericObject => {
                     genericObject.position.x += 5;
                 });
-                enemy.position.x += 5;
+                enemy1.position.x += 5;
+                enemy2.position.x += 5;
+                enemy3.position.x += 5;
+                enemy4.position.x += 5;
+                enemy5.position.x += 5;
             }
         }
         }
@@ -491,27 +549,37 @@ courses: { compsci: {week: 7} }
                 break;
             case 32:
                 console.log('space');
-                if (facing == false && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 < 100 && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //left
-                    enemy.velocity.y = -20;
-                    enemy.velocity.x = -5;
-                    enemyHealth--;
-                    console.log(player.position.x + player.width/2 - enemy.position.x + enemy.width/2);
-                    if(enemyHealth == 0){
-                        enemyHealth = 3;
-                        enemy.position.x = 500;
-                        enemy.position.y = 200;
-                        score++;
-                    }
-                }else if (facing == true && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 < 100 && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //right
-                    enemy.velocity.y = -20;
-                    enemy.velocity.x = 5;
-                    enemyHealth--;
-                    console.log(enemy.position.x + enemy.width/2 - player.position.x + player.width/2);
-                    if(enemyHealth == 0){
-                        enemyHealth = 3;
-                        enemy.position.x = 500;
-                        enemy.position.y = 200;
-                        score++;
+                enemyDamage(enemy1,enemyHealth1);
+                enemyDamage(enemy2,enemyHealth2);
+                enemyDamage(enemy3,enemyHealth3);
+                enemyDamage(enemy4,enemyHealth4);
+                enemyDamage(enemy5,enemyHealth5);
+                function enemyDamage(enemy,enemyHealth){
+                    if (facing == false && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 < 100 && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //left
+                        enemy.velocity.y = -20;
+                        enemy.velocity.x = -5;
+                        enemyHealth--;
+                        return enemyHealth;
+                        console.log(enemyHealth);
+                        console.log(player.position.x + player.width/2 - enemy.position.x + enemy.width/2);
+                        if(enemyHealth == 0){
+                            enemyHealth = 3;
+                            enemy.position.x = 500;
+                            enemy.position.y = 200;
+                            score++;
+                        }else{return enemyHealth;}
+                    }else if (facing == true && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 < 100 && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //right
+                        enemy.velocity.y = -20;
+                        enemy.velocity.x = 5;
+                        enemyHealth--;
+                        console.log(enemyHealth);
+                        console.log(enemy.position.x + enemy.width/2 - player.position.x + player.width/2);
+                        if(enemyHealth == 0){
+                            enemyHealth = 3;
+                            enemy.position.x = 500;
+                            enemy.position.y = 200;
+                            score++;
+                        }else{return enemyHealth;}
                     }
                 }
                 break;
@@ -539,3 +607,13 @@ courses: { compsci: {week: 7} }
                 break;
         }
     });
+    function fullscreen(){
+	    var el = document.getElementById('canvas');
+           if(el.webkitRequestFullScreen) {
+               el.webkitRequestFullScreen();
+           }
+          else {
+             el.mozRequestFullScreen();
+          }            
+        }
+	document.getElementById('canvas').addEventListener("click",fullscreen)
