@@ -27,6 +27,7 @@ courses: { compsci: {week: 7} }
     // Set the canvas dimensions
     canvas.width = 650;
     canvas.height = 400;
+    canvas.style.webkitFilter = "blur(0.25px)";
     // Set gravity value
     let gravity = 1.5;
     // Facing Value | true = right, false = left
@@ -102,7 +103,7 @@ courses: { compsci: {week: 7} }
             this.position.y += this.velocity.y;
             this.position.x += this.velocity.x;
             // Apply gravity if enemy is not at the bottom
-            if (this.position.y + this.height + this.velocity.y <= canvas.height)
+            if (this.position.y + this.height + this.velocity.y <= canvas.height - 40)  /////////////////CHANGE BACK TO this.position.y + this.height + this.velocity.y <= canvas.height ONCE GAME DONE
                 this.velocity.y += gravity;
             else
                 this.velocity.y = 0;
@@ -132,7 +133,7 @@ courses: { compsci: {week: 7} }
     //Text
     var ctx = canvas.getContext("2d");
     // Set the font style
-    ctx.font = "20px Arial"; // You can customize the font size and type
+    ctx.font = "20px monospace"; // You can customize the font size and type
     // Set the text color
     ctx.fillStyle = "black"; // You can customize the text color
     // Define the Platform class
@@ -144,7 +145,7 @@ courses: { compsci: {week: 7} }
                 y: 360
             }
             //this.image = image;
-            this.width = 650;
+            this.width = 50000;
             this.height = 40;
         }
         // Method to draw the platform on the canvas
@@ -360,6 +361,11 @@ function animate() {
         sword.update();
         enemy.update();
         platform.draw();
+        c.fillStyle = "#000000aa";
+        c.beginPath();
+        c.roundRect(492.5,32.5,120,40,5);
+        c.stroke();
+        c.fill();
         heart1.update();
         heart2.update();
         heart3.update();
@@ -370,10 +376,16 @@ function animate() {
         }if((player.position.x + player.width/2) < (enemy.position.x + enemy.width/2) && enemy.velocity.x >-enemyCap){
             enemy.velocity.x -= enemySpeed;
         }
-        c.fillStyle = "gray";
-        c.fillRect(enemy.position.x, enemy.position.y - 10, 50, 7.5);
-        c.fillStyle = "green";
-        c.fillRect(enemy.position.x, enemy.position.y - 10, 48 * (enemyHealth/3), 5);
+        c.fillStyle = "#000000aa";
+        c.beginPath();
+        c.roundRect(enemy.position.x + enemy.width/2 - 50/2, enemy.position.y - 10, 50, 7.5,5);
+        c.stroke();
+        c.fill();
+        c.fillStyle = "lime";
+        c.beginPath();
+        c.roundRect(enemy.position.x + enemy.width/2 - 50/2, enemy.position.y - 9, 48 * (enemyHealth/3), 5, 5);
+        c.stroke();
+        c.fill();
         //Player damage
         if(isColliding(player, enemy)){
             const enemypos = (enemy.position.x + enemy.width/2);
@@ -412,7 +424,12 @@ function animate() {
         }
         // Score
         // Set the text content and position
-        c.fillStyle = 'black';
+        c.fillStyle = "#000000aa";
+        c.beginPath();
+        c.roundRect(45,25,125,40,5);
+        c.stroke();
+        c.fill();
+        c.fillStyle = 'white';
         c.textAlign = 'left';
         c.font = "20px monospace";
         var text = "Score: "+score;
@@ -424,6 +441,7 @@ function animate() {
         collision(platform, player);
         collision(platform, enemy);
         //collision(blockObject);
+        //console.log(enemy.position);
         // Handle collisions and interactions
         // Handle collision between player and block object
         function collision(funcObject, objectToCollide){
@@ -470,11 +488,13 @@ function animate() {
                 genericObjects.forEach(genericObject => {
                     genericObject.position.x -= 5;
                 });
+                enemy.position.x -= 5;
             }
             else if (keys.left.pressed && !keys.right.pressed) {
                 genericObjects.forEach(genericObject => {
                     genericObject.position.x += 5;
                 });
+                enemy.position.x += 5;
             }
         }
         }
@@ -503,7 +523,7 @@ function animate() {
                 break;
             case 32:
                 console.log('space');
-                if (facing == false && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 < 100 && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 > 0 ){ //left
+                if (facing == false && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 < 100 && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //left
                     enemy.velocity.y = -20;
                     enemy.velocity.x = -5;
                     enemyHealth--;
@@ -514,7 +534,7 @@ function animate() {
                         enemy.position.y = 200;
                         score++;
                     }
-                }else if (facing == true && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 < 100){ //right
+                }else if (facing == true && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 < 100 && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //right
                     enemy.velocity.y = -20;
                     enemy.velocity.x = 5;
                     enemyHealth--;
