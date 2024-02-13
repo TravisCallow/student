@@ -506,7 +506,7 @@ courses: { compsci: {week: 7} }
         //--
         else {
             player.velocity.x = 0;
-            if (keys.right.pressed && !keys.left.pressed && genericObjects[0].position.x > -725) {
+            if (keys.right.pressed && !keys.left.pressed && genericObjects[0].position.x > -740) {
                 // make the background move slower for a cooler effect
                 genericObjects.forEach(genericObject => {
                     genericObject.position.x -= 5;
