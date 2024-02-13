@@ -506,7 +506,7 @@ courses: { compsci: {week: 7} }
         //--
         else {
             player.velocity.x = 0;
-            if (keys.right.pressed && !keys.left.pressed) {
+            if (keys.right.pressed && !keys.left.pressed && genericObjects[0].position.x > -725) {
                 // make the background move slower for a cooler effect
                 genericObjects.forEach(genericObject => {
                     genericObject.position.x -= 5;
@@ -517,7 +517,7 @@ courses: { compsci: {week: 7} }
                 enemy4.position.x -= 5;
                 enemy5.position.x -= 5;
             }
-            else if (keys.left.pressed && !keys.right.pressed) {
+            else if (keys.left.pressed && !keys.right.pressed && genericObjects[0].position.x > 1000) {
                 genericObjects.forEach(genericObject => {
                     genericObject.position.x += 5;
                 });
@@ -622,7 +622,6 @@ courses: { compsci: {week: 7} }
           }            
         }
     document.getElementById('canvas').addEventListener("click",fullscreen)
-
 
 
 
