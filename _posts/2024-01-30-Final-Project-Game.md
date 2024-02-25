@@ -45,11 +45,20 @@ courses: { compsci: {week: 7} }
     let gamestarted = false;
     // Score
     let score = 0;
+    let highscore = 0;
     // Spawn Location
     let pSpawnX = 100;
     let pSpawnY = 200;
     // Health
     let lives = 3;
+    let dmgDebounce = 0;
+    // Ultimate
+    let ultActive = false;
+    let ultPercentage = 0;
+    let ultMaxPercentage = 100;
+    let ultPercentageInc = 10;
+    let ultBind = "f";
+    let ultBlurDebounce = 0;
     // Enemy Speed
     let enemySpeed = 0.25;
     let enemyCap = 3;
@@ -256,6 +265,27 @@ courses: { compsci: {week: 7} }
             this.draw()
         }
     }
+    //healthpowerup
+    class healthpowerup {
+        constructor() {
+            // Initial position of the platform
+            this.position = {
+                x: -100,
+                y: -100
+            }
+            //this.image = image;
+            this.width = 25;
+            this.height = 25;
+        }
+        // Method to draw the platform on the canvas
+        draw() {
+            c.fillStyle = 'lime';
+            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        }
+        update() {
+            this.draw()
+        }
+    }
     // Define the Tube class
     class Tube {
         constructor(image) {
@@ -275,19 +305,23 @@ courses: { compsci: {week: 7} }
     }
     // Define the BlockObject class
     class BlockObject {
-        constructor(image) {
-            // Initial position of the block object
+         constructor() {
+            // Initial position of the platform
             this.position = {
-                x: 200,
-                y: 100
-            };
-            this.image = image;
-            this.width = 158;
-            this.height = 79;
+                x: 0,
+                y: 0
+            }
+            //this.image = image;
+            this.width = 100;
+            this.height = 1000;
         }
-        // Method to draw the block object on the canvas
+        // Method to draw the platform on the canvas
         draw() {
-            c.drawImage(this.image, this.position.x, this.position.y);
+            c.fillStyle = 'brown';
+            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        }
+        update() {
+            this.draw()
         }
     }
     //--
@@ -321,6 +355,9 @@ courses: { compsci: {week: 7} }
     imageTube.src = 'https://samayass.github.io/samayaCSA/images/tube.png';
     imageBlock.src = 'https://samayass.github.io/samayaCSA/images/box.png';
     //--
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
     // NEW CODE - IMAGE URLS FOR BACKGROUND IMAGES
     //--
     imageBackground.src = 'https://samayass.github.io/samayaCSA/images/background.png';
@@ -341,11 +378,25 @@ courses: { compsci: {week: 7} }
             x:0, y:-150, image: imageHills
         }),
     ];
+    function sound(src) {
+        this.sound = document.createElement("audio");
+        this.sound.src = src;
+        this.sound.setAttribute("preload", "auto");
+        this.sound.setAttribute("controls", "none");
+        this.sound.style.display = "none";
+        document.body.appendChild(this.sound);
+        this.play = function(){
+            this.sound.play();
+        }
+        this.stop = function(){
+            this.sound.pause();
+        }
+    } 
     player = new Player();
     lastUpdateTime = Date.now();
     enemy1 = new Enemy();
     let enemyHealth1 = 3;
-    enemy1.position.x = 1500;
+    enemy1.position.x = 800;
     enemy2 = new Enemy();
     enemy2.position.x = 500;
     let enemyHealth2 = 3;
@@ -368,6 +419,25 @@ courses: { compsci: {week: 7} }
     heart3 = new Heart();
     heart3.position.x = 580;
     heart3.position.y = 40;
+    healthpowerup1 = new healthpowerup();
+    healthpowerup1Enabled = false;
+    healthpowerup2 = new healthpowerup();
+    healthpowerup2Enabled = false;
+    healthpowerup3 = new healthpowerup();
+    healthpowerup3Enabled = false;
+    border1 = new BlockObject();
+    border1.position.x = 0;
+    border2 = new BlockObject();
+    border2.position.x = 1240;
+    let attackSound;
+    let pickupSound;
+    let damageSound;
+    let swordhitSound;
+    let loseSound;
+    let gameMusic;
+    let ultReadySound;
+    let ultSound;
+    let musicPlayed = false;
     // Define keys and their states
     let keys = {
         right: {
@@ -377,6 +447,17 @@ courses: { compsci: {week: 7} }
             pressed: false
         }
     };
+    //Sounds
+    attackSound = new sound("{{site.baseurl}}/images/swinging-staff-whoosh.mp3");
+    pickupSound = new sound("{{site.baseurl}}/images/pickup.mp3");
+    damageSound = new sound("{{site.baseurl}}/images/ough.mp3");
+    swordhitSound = new sound("{{site.baseurl}}/images/sword-hit.mp3");
+    loseSound = new sound("{{site.baseurl}}/images/lose-sound.wav");
+    ultReadySound = new sound("{{site.baseurl}}/images/ultimate-ready.mp3");
+    ultSound = new sound("{{site.baseurl}}/images/ultimate.mp3");
+    ultSound.volume = 2;
+    gameMusic = new sound('{{site.baseurl}}/images/Dragon-Castle.mp3');
+    gameMusic.loop = true;
     // Animation loop
     function animate() {
         requestAnimationFrame(animate);
@@ -393,6 +474,8 @@ courses: { compsci: {week: 7} }
             c.textAlign = "center";
             c.fillText("Welcome To Alex and Travis' Game",canvas.width/2,100);
             c.fillText("Press SPACE to continue",canvas.width/2,200);
+            c.fillText("Highscore: " + highscore,canvas.width/2,270);
+            c.fillText("Score: " + score,canvas.width/2,300);
             addEventListener('keydown', ({ keyCode }) => {
                 switch (keyCode) {
                     case 32:
@@ -413,7 +496,31 @@ courses: { compsci: {week: 7} }
                         enemyHealth3 = 3;
                         enemyHealth4 = 3;
                         enemyHealth5 = 3;
+                        enemy1.position.y = 100;
+                        enemy2.position.y = 1000;
+                        enemy3.position.y = 1000;
+                        enemy4.position.y = 1000;
+                        enemy5.position.y = 1000;
+                        enemy1.velocity.x = 0;
+                        enemy1.velocity.y = 0;
+                        enemy2.velocity.x = 0;
+                        enemy2.velocity.y = 0;
+                        enemy3.velocity.x = 0;
+                        enemy3.velocity.y = 0;
+                        enemy4.velocity.x = 0;
+                        enemy4.velocity.y = 0;
+                        enemy5.velocity.x = 0;
+                        enemy5.velocity.y = 0;
+                        healthpowerup1Enabled = false;
+                        healthpowerup2Enabled = false;
+                        healthpowerup3Enabled = false;
+                        healthpowerup1.position.y = 1000;
+                        healthpowerup2.position.y = 1000;
+                        healthpowerup3.position.y = 1000;
+                        ultPercentage = 0;
                         score = 0;
+                        gameMusic.stop();
+                        gameMusic.play();
                         break;
                         }
                 }
@@ -434,6 +541,8 @@ courses: { compsci: {week: 7} }
         enemy3.update();
         enemy4.update();
         enemy5.update();
+        border1.update();
+        border2.update();
         platform.draw();
         c.fillStyle = "#000000aa";
         c.beginPath();
@@ -443,6 +552,9 @@ courses: { compsci: {week: 7} }
         heart1.update();
         heart2.update();
         heart3.update();
+        healthpowerup1.update();
+        healthpowerup2.update();
+        healthpowerup3.update();
         //
         //Enemy AI
         enemyAI(enemy1);
@@ -480,10 +592,14 @@ courses: { compsci: {week: 7} }
         enemyCollision(enemy3);
         enemyCollision(enemy4);
         enemyCollision(enemy5);
+        if(dmgDebounce > 0){
+            dmgDebounce--;
+        }
         function enemyCollision(enemy){
-            if(isColliding(player, enemy)){
+            if(isColliding(player, enemy) && dmgDebounce <=0){
                 const enemypos = (enemy.position.x + enemy.width/2);
                 const playerpos = (player.position.x + player.width/2);
+                dmgDebounce = 15;
                 //enemy.position.y = 200;
                 //enemy.position.x = 500;
                 player.velocity.y = -22.5;
@@ -491,23 +607,52 @@ courses: { compsci: {week: 7} }
                 if(enemypos > playerpos){
                     console.log("Contact Left");
                     player.velocity.x = -5;
-                    enemy.velocity.x = 10;
+                    enemy.velocity.x = 12;
                 }else if(enemypos <= playerpos){
                     player.velocity.x = 5;
-                    enemy.velocity.x = -10;
+                    enemy.velocity.x = -12;
                     console.log("Contact Right");
                 }
-                score--;
+                damageSound.play();
                 if(lives == 3){
                     heart3.position.y = -45;
                 }else if (lives == 2){
                     heart2.position.y = -45
                 }else if (lives == 1){
                     heart1.position.y = -45;
+                    loseSound.play();
+                    gameMusic.stop();
+                    gameMusic.currentTime = 0;
+                    if(score>highscore){
+                        highscore = score;
+                    }
                     gamestarted = false;
                 }
                 lives--;
             }
+        }
+        healthpowerup1Enabled = healthCollision(healthpowerup1, healthpowerup1Enabled);
+        healthpowerup2Enabled = healthCollision(healthpowerup2, healthpowerup2Enabled);
+        healthpowerup3Enabled = healthCollision(healthpowerup3, healthpowerup3Enabled);
+        function healthCollision(healthP, healthPActive){
+            if(isColliding(player,healthP)){
+                if(lives < 3){
+                    pickupSound.play();
+                    if(lives == 2){
+                        healthP.position.y = -100;
+                        heart3.position.y = 40;
+                        healthPActive = false
+                    }else if(lives == 1){
+                        healthP.position.y = -100;
+                        heart2.position.y = 40;
+                        healthPActive = false
+                    }
+                    lives++;
+                }
+                console.log(lives);
+                console.log(healthPActive);
+            }
+            return healthPActive;
         }
         //Move sword;
         if(facing == true){
@@ -532,6 +677,35 @@ courses: { compsci: {week: 7} }
         var y = 50; // Y-coordinate
         // Draw the text on the canvas
         ctx.fillText(text, x, y);
+        // ULTIMATE ABILITY
+        c.fillStyle = "#000000aa";
+        c.beginPath();
+        c.roundRect(canvas.width/2 - 85,30,200,30,5);
+        c.stroke();
+        c.fill();
+        c.fillStyle = "#0088ffee";
+        c.beginPath();
+        c.roundRect(canvas.width/2 - 85,30,(ultPercentage/ultMaxPercentage) * 200,30,5);
+        c.stroke();
+        c.fill();
+        if(ultPercentage >= ultMaxPercentage){
+            c.fillStyle = 'black';
+            c.textAlign = 'left';
+            c.font = "15px monospace";
+            ctx.fillText("ULTIMATE READY", canvas.width/2 - 85,50)
+            c.font = "12px monospace";
+            ctx.fillText("Press: " + ultBind, canvas.width/2 + 50,48)
+        }
+        if(ultBlurDebounce > 1){
+            canvas.style.webkitFilter = "blur(5px)";
+            ctx.filter = 'invert(1)';
+            ultBlurDebounce--;
+        }else if(ultBlurDebounce == 1){
+            ultBlurDebounce = 0;
+            canvas.style.webkitFilter = "blur(0.25px)";
+            ctx.filter = 'invert(0)';
+            gameMusic.play();
+        }
         //Collisions
         collision(platform, player);
         collision(platform, enemy1);
@@ -539,6 +713,7 @@ courses: { compsci: {week: 7} }
         collision(platform, enemy3);
         collision(platform, enemy4);
         collision(platform, enemy5);
+        //Respawn enemy
         //collision(blockObject);
         //console.log(enemy.position);
         // Handle collisions and interactions
@@ -569,11 +744,23 @@ courses: { compsci: {week: 7} }
             player.velocity.y = 0;
             player.position.y = 30+player.height
         }
+        checkEnemyWall(enemy1);
+        checkEnemyWall(enemy2);
+        checkEnemyWall(enemy3);
+        checkEnemyWall(enemy4);
+        checkEnemyWall(enemy5);
+        function checkEnemyWall(enemy){
+            if(isColliding(enemy, border1)){
+                enemy.velocity.x = -enemy.velocity.x
+            }else if(isColliding(enemy, border2)){
+                enemy.velocity.x = -enemy.velocity.x
+            }
+        }
         // Move the player horizontally and adjust other objects
         if (keys.right.pressed && player.position.x < 500) {
             player.velocity.x = 15;
         }
-        else if (keys.left.pressed && player.position.x > 0) {
+        else if (keys.left.pressed && player.position.x > 100) {
             player.velocity.x = -15;
         }else if (player.velocity.y < 0 && player.position.x < 500 && player.position.x > 100){
         }
@@ -582,7 +769,7 @@ courses: { compsci: {week: 7} }
         //--
         else {
             player.velocity.x = 0;
-            if (keys.right.pressed && !keys.left.pressed && genericObjects[0].position.x > -750) {
+            if (keys.right.pressed && !keys.left.pressed && genericObjects[0].position.x > -700) {
                 // make the background move slower for a cooler effect
                 genericObjects.forEach(genericObject => {
                     genericObject.position.x -= 5;
@@ -592,8 +779,13 @@ courses: { compsci: {week: 7} }
                 enemy3.position.x -= 5;
                 enemy4.position.x -= 5;
                 enemy5.position.x -= 5;
+                border1.position.x -= 5;
+                border2.position.x -= 5;
+                healthpowerup1.position.x -= 5;
+                healthpowerup2.position.x -= 5;
+                healthpowerup3.position.x -= 5;
             }
-            else if (keys.left.pressed && !keys.right.pressed && genericObjects[0].position.x > 1000) {
+            else if (keys.left.pressed && !keys.right.pressed && genericObjects[0].position.x < 0) {
                 genericObjects.forEach(genericObject => {
                     genericObject.position.x += 5;
                 });
@@ -602,6 +794,11 @@ courses: { compsci: {week: 7} }
                 enemy3.position.x += 5;
                 enemy4.position.x += 5;
                 enemy5.position.x += 5;
+                border1.position.x += 5;
+                border2.position.x += 5;
+                healthpowerup1.position.x += 5;
+                healthpowerup2.position.x += 5;
+                healthpowerup3.position.x += 5;
             }
         }
         }
@@ -630,7 +827,6 @@ courses: { compsci: {week: 7} }
                 break;
             case 32:
                 console.log('space');
-                player.swordDraw(true);
                 enemyHealth1 = enemyDamage(enemy1,enemyHealth1);
                 enemyHealth2 = enemyDamage(enemy2,enemyHealth2);
                 enemyHealth3 = enemyDamage(enemy3,enemyHealth3);
@@ -668,6 +864,33 @@ courses: { compsci: {week: 7} }
         }
     });
     // Event listener for key releases
+    function powerupAdd(enemyPosX, enemyPosY){
+        const randNum = getRandomInt(2);
+        if(randNum == 1){
+            console.log("Add")
+            if (healthpowerup1Enabled == false){
+                healthpowerup1Enabled = true;
+                healthpowerup1.position.x = enemyPosX
+                healthpowerup1.position.y = enemyPosY
+            }else if (healthpowerup2Enabled == false){
+                healthpowerup2Enabled = true;
+                healthpowerup2.position.x = enemyPosX
+                healthpowerup2.position.y = enemyPosY
+            }else if (healthpowerup3Enabled == false){
+                healthpowerup3Enabled = true;
+                healthpowerup3.position.x = enemyPosX
+                healthpowerup3.position.y = enemyPosY
+            }
+        }else if(randNum <= 0){
+            console.log("Nothin");
+        }
+    }
+    function respawnEnemy(enemy){
+            enemy.position.x = Math.random() * ((border2.position.x - 60) - (border1.position.x+60)) + (border1.position.x+60);
+            enemy.position.y = 200;
+            enemy.velocity.x = 0;
+            enemy.velocity.y = 0;
+        }
     addEventListener('keyup', ({ keyCode }) => {
         switch (keyCode) {
             case 65:
@@ -686,6 +909,119 @@ courses: { compsci: {week: 7} }
             case 87:
                 console.log('up');
                 //if(player.velocity.y == 0){player.velocity.y = -20;}
+                break;
+            case 70:
+                console.log('f');
+                if(ultPercentage >= ultMaxPercentage){
+                    gameMusic.stop();
+                    ultSound.play();
+                    ultPercentage = 0;
+                    ultBlurDebounce = 40;
+                    if(facing == false){
+                        checkLeftEnemy(enemy1);
+                        checkLeftEnemy(enemy2);
+                        checkLeftEnemy(enemy3);
+                        checkLeftEnemy(enemy4);
+                        checkLeftEnemy(enemy5);
+                    }else if(facing == true){
+                        checkRightEnemy(enemy1);
+                        checkRightEnemy(enemy2);
+                        checkRightEnemy(enemy3);
+                        checkRightEnemy(enemy4);
+                        checkRightEnemy(enemy5);
+                    }
+                }
+                function checkRightEnemy(enemy){
+                    if(enemy.position.x > player.position.x && enemy.position.y < 500){
+                        enemyHealth = 0;
+                        if(enemyHealth == 0){
+                            enemyHealth = 3;
+                            powerupAdd(enemy.position.x, enemy.position.y);
+                            respawnEnemy(enemy);
+                            score++;
+                        }
+                    }
+                }
+                function checkLeftEnemy(enemy){
+                    if(enemy.position.x < player.position.x && enemy.position.y < 500){
+                        enemyHealth = 0;
+                        if(enemyHealth == 0){
+                            enemyHealth = 3;
+                            powerupAdd(enemy.position.x, enemy.position.y);
+                            respawnEnemy(enemy);
+                            score++;
+                        }
+                    }
+                }
+                break;
+            case 32:
+                console.log('space');
+                enemyHealth1 = enemyDamage(enemy1,enemyHealth1);
+                enemyHealth2 = enemyDamage(enemy2,enemyHealth2);
+                enemyHealth3 = enemyDamage(enemy3,enemyHealth3);
+                enemyHealth4 = enemyDamage(enemy4,enemyHealth4);
+                enemyHealth5 = enemyDamage(enemy5,enemyHealth5);
+                attackSound.play();
+                function enemyDamage(enemy,enemyHealth){
+                    if (facing == false && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 < 100 && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //left
+                        enemy.velocity.y = -20;
+                        enemy.velocity.x = -5;
+                        enemyHealth--;
+                        swordhitSound.play();
+                        console.log(enemyHealth);
+                        console.log(player.position.x + player.width/2 - enemy.position.x + enemy.width/2);
+                        if(enemyHealth == 0){
+                            enemyHealth = 3;
+                            powerupAdd(enemy.position.x, enemy.position.y);
+                            respawnEnemy(enemy);
+                            if(ultPercentage < ultMaxPercentage){
+                                ultPercentage += ultPercentageInc;
+                                if(ultPercentage >= ultMaxPercentage){
+                                    ultReadySound.play();
+                                }
+                            }
+                            score++;
+                            if(score == 5){
+                                respawnEnemy(enemy2);
+                            }else if(score == 15){
+                                respawnEnemy(enemy3);
+                            }else if(score == 25){
+                                respawnEnemy(enemy4);
+                            }else if(score == 50){
+                                respawnEnemy(enemy5);
+                            }
+                        }
+                    }else if (facing == true && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 < 100 && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //right
+                        enemy.velocity.y = -20;
+                        enemy.velocity.x = 5;
+                        enemyHealth--;
+                        swordhitSound.play();
+                        console.log(enemyHealth);
+                        console.log(enemy.position.x + enemy.width/2 - player.position.x + player.width/2);
+                        if(enemyHealth == 0){
+                            enemyHealth = 3;
+                            powerupAdd(enemy.position.x, enemy.position.y);
+                            respawnEnemy(enemy);
+                            if(ultPercentage < ultMaxPercentage){
+                                ultPercentage += ultPercentageInc;
+                                if(ultPercentage >= ultMaxPercentage){
+                                    ultReadySound.play();
+                                }
+                            }
+                            score++;
+                            if(score == 5){
+                                respawnEnemy(enemy2);
+                            }else if(score == 15){
+                                respawnEnemy(enemy3);
+                            }else if(score == 25){
+                                respawnEnemy(enemy4);
+                            }else if(score == 50){
+                                respawnEnemy(enemy5);
+                            }
+                        }
+                    }
+                    return enemyHealth;
+                }
                 break;
         }
     });
