@@ -56,7 +56,7 @@ courses: { compsci: {week: 7} }
     let ultActive = false;
     let ultPercentage = 0;
     let ultMaxPercentage = 100;
-    let ultPercentageInc = 10;
+    let ultPercentageInc = 20;
     let ultBind = "f";
     let ultBlurDebounce = 0;
     // Enemy Speed
@@ -886,7 +886,7 @@ courses: { compsci: {week: 7} }
         }
     }
     function respawnEnemy(enemy){
-            enemy.position.x = Math.random() * ((border2.position.x - 60) - (border1.position.x+60)) + (border1.position.x+60);
+            enemy.position.x = Math.random() * ((border2.position.x - 100) - (border1.position.x+100)) + (border1.position.x+100);
             enemy.position.y = 200;
             enemy.velocity.x = 0;
             enemy.velocity.y = 0;
@@ -916,6 +916,7 @@ courses: { compsci: {week: 7} }
                     gameMusic.stop();
                     ultSound.play();
                     ultPercentage = 0;
+                    dmgDebounce = 50;
                     ultBlurDebounce = 40;
                     if(facing == false){
                         checkLeftEnemy(enemy1);
