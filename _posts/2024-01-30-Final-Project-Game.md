@@ -79,7 +79,7 @@ courses: { compsci: {week: 7} }
             // Dimensions of the player
             this.width = 20;
             this.height =30;
-            this.spriteSheet = new Image();
+            this.spriteSheet = new Image();            
             this.spriteSheet.src = "{{site.baseurl}}/images/Samurai_sprite-sheet.png"; 
             //"{{site.baseurl}}/images/Samurai_sprite-sheet.png
              // Animation properties
@@ -131,7 +131,7 @@ courses: { compsci: {week: 7} }
                 console.log("currenttime",this.currentTime);
                 console.log("lastUpdateTime",lastUpdateTime);
                 console.log("this.elapsedtime",this.elapsedTime);
-                if(this.elapsedTime >= 50000 ){
+                if(this.elapsedTime >= 1000 ){
                     console.log("1s have passed");
                     this.swordDrawVar = false;
                     lastUpdateTime=Date.now();
@@ -139,7 +139,7 @@ courses: { compsci: {week: 7} }
                         console.log("1s has not passed, keep sword drawen");
                         this.swordDrawVer=true;
                 }
-            }
+            }   
             if(this.swordDrawVar ){
                 //fighting position
                 console.log("Draw Sword");
