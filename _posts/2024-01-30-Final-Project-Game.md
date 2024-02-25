@@ -53,9 +53,11 @@ courses: { compsci: {week: 7} }
     // Enemy Speed
     let enemySpeed = 0.25;
     let enemyCap = 3;
+    //timer
+    let lastUpdateTime = Date.now();
     // Define the Player class
     class Player {
-        constructor() {
+        constructor(fight) {
             // Initial position and velocity of the player
             this.position = {
                 x: pSpawnX,
@@ -66,13 +68,80 @@ courses: { compsci: {week: 7} }
                 y: 0
             };
             // Dimensions of the player
-            this.width = 30;
-            this.height = 30;
+            this.width = 20;
+            this.height =30;
+            this.spriteSheet = new Image();
+            this.spriteSheet.src = "{{site.baseurl}}/images/Samurai_sprite-sheet.png"; 
+            //"{{site.baseurl}}/images/Samurai_sprite-sheet.png
+             // Animation properties
+            // Position on SpriteSheet 
+            this.normalPositionWidth = 100; //3rd Row first Column
+            this.normalPositionHeight = 500;
+            this.fightPositionWidth = 710; // 4rd Row 3rd Column
+            this.fightPositionHeight = 700;
+            this.scaleWidth =100;
+            this.scaleHeight = 80;
+            // Timing for frame updates
+            this.frameInterval = 100;
+            this.lastFrameUpdate = Date.now();
+            //time for sprite
+            this.frameDuration=1000;
+            this.currentTime=0;
+            this.elapsedTime=0;
+            this.swordDrawVar=false;
+            this.loaded = false;
+            //funtions for SpriteSheet errors
+            this.spriteSheet.onload = () => {
+                console.log("Sprite sheet loaded correctly");
+                this.loaded = true;
+            }
+            this.spriteSheet.onerror = () => {
+                console.log("Error Loading Sprite Sheet");
+            }
         }
-        // Method to draw the player on the canvas
+        //set sword
+        swordDraw(swordDrawVar=false){
+            console.log("Set the swordDraw Variable");
+            this.swordDrawVar=swordDrawVar;
+            if(this.swordDrawVar)
+               this.currentTime=Date.now();
+        }
+        //Draw Function
         draw() {
-            c.fillStyle = 'yellow';
-            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+            if (!this.loaded)return;
+            //c.fillStyle = 'black';
+            //c.fillRect(this.position.x, this.position.y, this.width, this.height);
+            // Clear the rect
+            //c.clearRect(0,0,canvas.width,canvas.height);
+            //draw scaled Sprite, size of Sprite is 280W x 180H
+            //Adjust the position of the sprite so it can be in front of the enemies by 100W and 40H
+            // Scale the Sprite to 100W and 80H
+            if (this.swordDrawVar){
+                console.log("Sword was Drawen");
+                this.elpasedTime=this.currentTime-lastUpdateTime;
+                console.log("currenttime",this.currentTime);
+                console.log("lastUpdateTime",lastUpdateTime);
+                console.log("this.elapsedtime",this.elapsedTime);
+                if(this.elapsedTime >= 1000 ){
+                    console.log("1s have passed");
+                    this.swordDrawVar = false;
+                    lastUpdateTime=Date.now();
+                }else{
+                        console.log("1s has not passed, keep sword drawen");
+                        this.swordDrawVer=true;
+                }
+            }
+            if(this.swordDrawVar ){
+                //fighting position
+                console.log("Draw Sword");
+                c.drawImage(this.spriteSheet,this.fightPositionWidth,this.fightPositionHeight,280,180,this.position.x-100,this.position.y-40,100,80);
+                this.lastUpdateTime = Date.now();
+                this.elapsedTime = this.currentTime-this.lastUpdateTime;
+            }
+            else
+               //normal position
+               c.drawImage(this.spriteSheet,this.normalPositionWidth,this.normalPositionHeight,280,180,this.position.x-100,this.position.y-40,100,80);
+               this.swordDrawVar=false;
         }
         // Method to update the player position and velocity
         update() {
@@ -273,6 +342,7 @@ courses: { compsci: {week: 7} }
         }),
     ];
     player = new Player();
+    lastUpdateTime = Date.now();
     enemy1 = new Enemy();
     let enemyHealth1 = 3;
     enemy1.position.x = 1500;
@@ -560,6 +630,7 @@ courses: { compsci: {week: 7} }
                 break;
             case 32:
                 console.log('space');
+                player.swordDraw(true);
                 enemyHealth1 = enemyDamage(enemy1,enemyHealth1);
                 enemyHealth2 = enemyDamage(enemy2,enemyHealth2);
                 enemyHealth3 = enemyDamage(enemy3,enemyHealth3);
