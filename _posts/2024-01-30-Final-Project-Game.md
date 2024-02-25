@@ -131,7 +131,7 @@ courses: { compsci: {week: 7} }
                 console.log("currenttime",this.currentTime);
                 console.log("lastUpdateTime",lastUpdateTime);
                 console.log("this.elapsedtime",this.elapsedTime);
-                if(this.elapsedTime >= 1000 ){
+                if(this.elapsedTime >= 50000 ){
                     console.log("1s have passed");
                     this.swordDrawVar = false;
                     lastUpdateTime=Date.now();
