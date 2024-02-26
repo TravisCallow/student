@@ -312,6 +312,12 @@ courses: { compsci: {week: 7} }
         requestAnimationFrame(animate);
         c.clearRect(0, 0, canvas.width, canvas.height);
         if(gamestarted == false){
+            c.beginPath();
+            c.roundRect(50, 50, 550, 300,3);
+            c.stroke();
+            c.lineWidth = 3;
+            c.fillStyle = '#000000aa';
+            c.fill();
             c.fillStyle = 'black';
             c.font = "30px monospace";
             c.textAlign = "center";
@@ -622,9 +628,3 @@ courses: { compsci: {week: 7} }
           }            
         }
     document.getElementById('canvas').addEventListener("click",fullscreen)
-
-
-
-
-
-
