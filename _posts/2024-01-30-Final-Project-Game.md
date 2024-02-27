@@ -272,6 +272,20 @@ courses: { compsci: {week: 7} }
             x:0, y:-150, image: imageHills
         }),
     ];
+    function sound(src) {
+        this.sound = document.createElement("audio");
+        this.sound.src = src;
+        this.sound.setAttribute("preload", "auto");
+        this.sound.setAttribute("controls", "none");
+        this.sound.style.display = "none";
+        document.body.appendChild(this.sound);
+        this.play = function(){
+            this.sound.play();
+        }
+        this.stop = function(){
+            this.sound.pause();
+        }
+    } 
     player = new Player();
     enemy1 = new Enemy();
     let enemyHealth1 = 3;
@@ -298,6 +312,8 @@ courses: { compsci: {week: 7} }
     heart3 = new Heart();
     heart3.position.x = 580;
     heart3.position.y = 40;
+    var attackSound;
+    var gameMusic;
     // Define keys and their states
     let keys = {
         right: {
@@ -311,6 +327,7 @@ courses: { compsci: {week: 7} }
     function animate() {
         requestAnimationFrame(animate);
         c.clearRect(0, 0, canvas.width, canvas.height);
+        attackSound = new sound();
         if(gamestarted == false){
             c.beginPath();
             c.roundRect(50, 50, 550, 300,3);
@@ -343,6 +360,11 @@ courses: { compsci: {week: 7} }
                         enemyHealth3 = 3;
                         enemyHealth4 = 3;
                         enemyHealth5 = 3;
+                        enemy1.position.y = 100;
+                        enemy2.position.y = 1000;
+                        enemy3.position.y = 1000;
+                        enemy4.position.y = 1000;
+                        enemy5.position.y = 1000;
                         score = 0;
                         break;
                         }
