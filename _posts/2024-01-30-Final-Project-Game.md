@@ -327,7 +327,7 @@ courses: { compsci: {week: 7} }
     function animate() {
         requestAnimationFrame(animate);
         c.clearRect(0, 0, canvas.width, canvas.height);
-        attackSound = new sound();
+        attackSound = new sound("{{site.baseurl}}/images/swinging-staff-whoosh.mp3");
         if(gamestarted == false){
             c.beginPath();
             c.roundRect(50, 50, 550, 300,3);
@@ -581,12 +581,37 @@ courses: { compsci: {week: 7} }
                 if(player.velocity.y == 0){player.velocity.y = -20;}
                 break;
             case 32:
+                break;
+        }
+    });
+    // Event listener for key releases
+    addEventListener('keyup', ({ keyCode }) => {
+        switch (keyCode) {
+            case 65:
+                console.log('left');
+                keys.left.pressed = false;
+                player.velocity.x = 0;
+                break;
+            case 83:
+                console.log('down');
+                break;
+            case 68:
+                console.log('right');
+                player.velocity.x = 0;
+                keys.right.pressed = false;
+                break;
+            case 87:
+                console.log('up');
+                //if(player.velocity.y == 0){player.velocity.y = -20;}
+                break;
+            case 32:
                 console.log('space');
                 enemyHealth1 = enemyDamage(enemy1,enemyHealth1);
                 enemyHealth2 = enemyDamage(enemy2,enemyHealth2);
                 enemyHealth3 = enemyDamage(enemy3,enemyHealth3);
                 enemyHealth4 = enemyDamage(enemy4,enemyHealth4);
                 enemyHealth5 = enemyDamage(enemy5,enemyHealth5);
+                attackSound.play();
                 function enemyDamage(enemy,enemyHealth){
                     if (facing == false && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 < 100 && player.position.x + player.width/2 - enemy.position.x + enemy.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //left
                         enemy.velocity.y = -20;
@@ -615,28 +640,6 @@ courses: { compsci: {week: 7} }
                     }
                     return enemyHealth;
                 }
-                break;
-        }
-    });
-    // Event listener for key releases
-    addEventListener('keyup', ({ keyCode }) => {
-        switch (keyCode) {
-            case 65:
-                console.log('left');
-                keys.left.pressed = false;
-                player.velocity.x = 0;
-                break;
-            case 83:
-                console.log('down');
-                break;
-            case 68:
-                console.log('right');
-                player.velocity.x = 0;
-                keys.right.pressed = false;
-                break;
-            case 87:
-                console.log('up');
-                //if(player.velocity.y == 0){player.velocity.y = -20;}
                 break;
         }
     });
