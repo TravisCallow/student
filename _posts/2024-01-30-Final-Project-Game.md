@@ -109,12 +109,12 @@ courses: { compsci: {week: 7} }
             }
              console.log("1s has not passed, keep sword drawen");
                   this.swordDrawVer=true;
-                      Define in the Player class
+                      //Define in the Player class
                       this.counter = 500000;
                       if(this.swordDrawVar)
                       {
-                    c.drawImage(….);
-                     this.counter—;
+                    c.drawImage();
+                     this.counter--;
                      If (this.counter ==0)
                     {
 	                this.counter = 500000; // modify this value to work for you
@@ -122,14 +122,14 @@ courses: { compsci: {week: 7} }
 	                }
                     }else
                     { 
-                    c.drawImage(…);
+                    c.drawImage();
         }
         //set sword
-        swordDraw(swordDrawVar=false){
-            console.log("Set the swordDraw Variable");
-            this.swordDrawVar=swordDrawVar;
-            if(this.swordDrawVar)
-               this.currentTime=Date.now();
+        swordDraw(swordDrawVar=false)
+        console.log("Set the swordDraw Variable");
+        this.swordDrawVar=swordDrawVar;
+        if(this.swordDrawVar){
+           this.currentTime=Date.now();
         }
         //Draw Function
         draw() {
@@ -147,7 +147,7 @@ courses: { compsci: {week: 7} }
                 console.log("currenttime",this.currentTime);
                 console.log("lastUpdateTime",lastUpdateTime);
                 //console.log("this.elapsedtime",this.elapsedTime);
-                //if(this.elapsedTime >= 1000 ){
+                if(this.elapsedTime >= 1000 ){
                     console.log("1s have passed");
                     this.swordDrawVar = false;
                     lastUpdateTime=Date.now();
@@ -160,10 +160,11 @@ courses: { compsci: {week: 7} }
                 this.lastUpdateTime = Date.now();
                 this.elapsedTime = this.currentTime-this.lastUpdateTime;
             }
-            else
+            else{
                //normal position
                c.drawImage(this.spriteSheet,this.normalPositionWidth,this.normalPositionHeight,280,180,this.position.x-70,this.position.y-40,100,80);
                this.swordDrawVar=false;
+            }
         }
         // Method to update the player position and velocity
         update() {
