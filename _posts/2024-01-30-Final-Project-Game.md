@@ -59,6 +59,8 @@ courses: { compsci: {week: 7} }
     let ultPercentageInc = 20;
     let ultBind = "f";
     let ultBlurDebounce = 0;
+    //Menu debounce
+    let menuDebounce = 0;
     // Enemy Speed
     let enemySpeed = 0.25;
     let enemyCap = 3;
@@ -107,6 +109,22 @@ courses: { compsci: {week: 7} }
             this.spriteSheet.onerror = () => {
                 console.log("Error Loading Sprite Sheet");
             }
+             console.log("1s has not passed, keep sword drawen");
+                  this.swordDrawVer=true;
+                      Define in the Player class
+                      this.counter = 500000;
+                      if(this.swordDrawVar)
+                      {
+                    c.drawImage(….);
+                     this.counter—;
+                     If (this.counter ==0)
+                    {
+	                this.counter = 500000; // modify this value to work for you
+	                this.swordDrawVar=false;
+	                }
+                    }else
+                    { 
+                    c.drawImage(…);
         }
         //set sword
         swordDraw(swordDrawVar=false){
@@ -127,20 +145,17 @@ courses: { compsci: {week: 7} }
             // Scale the Sprite to 100W and 80H
             if (this.swordDrawVar){
                 console.log("Sword was Drawen");
-                this.elpasedTime=this.currentTime-lastUpdateTime;
+                //this.elpasedTime=this.currentTime-lastUpdateTime;
                 console.log("currenttime",this.currentTime);
                 console.log("lastUpdateTime",lastUpdateTime);
-                console.log("this.elapsedtime",this.elapsedTime);
-                if(this.elapsedTime >= 1000 ){
+                //console.log("this.elapsedtime",this.elapsedTime);
+                //if(this.elapsedTime >= 1000 ){
                     console.log("1s have passed");
                     this.swordDrawVar = false;
                     lastUpdateTime=Date.now();
-                }else{
-                        console.log("1s has not passed, keep sword drawen");
-                        this.swordDrawVer=true;
                 }
             }   
-            if(this.swordDrawVar ){
+            if(this.swordDrawVar){
                 //fighting position
                 console.log("Draw Sword");
                 c.drawImage(this.spriteSheet,this.fightPositionWidth,this.fightPositionHeight,280,180,this.position.x-100,this.position.y-40,100,80);
@@ -246,20 +261,19 @@ courses: { compsci: {week: 7} }
     }
     //hearts
     class Heart {
-        constructor() {
+        constructor(image) {
             // Initial position of the platform
             this.position = {
                 x: 0,
                 y: 0
             }
-            //this.image = image;
+            this.image = image;
             this.width = 25;
             this.height = 25;
         }
         // Method to draw the platform on the canvas
         draw() {
-            c.fillStyle = 'red';
-            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+            c.drawImage(this.image, this.position.x, this.position.y);
         }
         update() {
             this.draw()
@@ -346,6 +360,7 @@ courses: { compsci: {week: 7} }
     let image = new Image();
     let imageTube = new Image();
     let imageBlock = new Image();
+    let imageHeart = new Image();
     //--
     // NEW CODE - ADD IMAGES FOR BACKGROUND
     //--
@@ -354,6 +369,7 @@ courses: { compsci: {week: 7} }
     image.src = 'https://samayass.github.io/samayaCSA/images/platform.png';
     imageTube.src = 'https://samayass.github.io/samayaCSA/images/tube.png';
     imageBlock.src = 'https://samayass.github.io/samayaCSA/images/box.png';
+    imageHeart.src = '{{site.baseurl}}/images/heart.jpg';
     //--
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
@@ -410,13 +426,13 @@ courses: { compsci: {week: 7} }
     enemy5.position.x = 1200;
     let enemyHealth5 = 3;
     sword = new Sword();
-    heart1 = new Heart();
+    heart1 = new Heart(imageHeart);
     heart1.position.x = 500;
     heart1.position.y = 40;
-    heart2 = new Heart();
+    heart2 = new Heart(imageHeart);
     heart2.position.x = 540;
     heart2.position.y = 40;
-    heart3 = new Heart();
+    heart3 = new Heart(imageHeart);
     heart3.position.x = 580;
     heart3.position.y = 40;
     healthpowerup1 = new healthpowerup();
@@ -476,10 +492,13 @@ courses: { compsci: {week: 7} }
             c.fillText("Press SPACE to continue",canvas.width/2,200);
             c.fillText("Highscore: " + highscore,canvas.width/2,270);
             c.fillText("Score: " + score,canvas.width/2,300);
+            if(menuDebounce > 0){
+                menuDebounce--;
+            }
             addEventListener('keydown', ({ keyCode }) => {
                 switch (keyCode) {
                     case 32:
-                        if(gamestarted == false){
+                        if(gamestarted == false && menuDebounce == 0){
                         console.log('space');
                         gamestarted = true;
                         heart1.position.x = 500;
@@ -627,6 +646,7 @@ courses: { compsci: {week: 7} }
                         highscore = score;
                     }
                     gamestarted = false;
+                    menuDebounce = 100;
                 }
                 lives--;
             }
@@ -984,11 +1004,11 @@ courses: { compsci: {week: 7} }
                             score++;
                             if(score == 5){
                                 respawnEnemy(enemy2);
-                            }else if(score == 15){
+                            }else if(score >= 15 && score < 17){
                                 respawnEnemy(enemy3);
-                            }else if(score == 25){
+                            }else if(score >= 25 && score < 28){
                                 respawnEnemy(enemy4);
-                            }else if(score == 50){
+                            }else if(score >= 50 && score < 54){
                                 respawnEnemy(enemy5);
                             }
                         }
