@@ -59,8 +59,6 @@ courses: { compsci: {week: 7} }
     let ultPercentageInc = 20;
     let ultBind = "f";
     let ultBlurDebounce = 0;
-    //Menu debounce
-    let menuDebounce = 0;
     // Enemy Speed
     let enemySpeed = 0.25;
     let enemyCap = 3;
@@ -158,13 +156,13 @@ courses: { compsci: {week: 7} }
             if(this.swordDrawVar){
                 //fighting position
                 console.log("Draw Sword");
-                c.drawImage(this.spriteSheet,this.fightPositionWidth,this.fightPositionHeight,280,180,this.position.x-100,this.position.y-40,100,80);
+                c.drawImage(this.spriteSheet,this.fightPositionWidth,this.fightPositionHeight,280,180,this.position.x-70,this.position.y-40,100,80);
                 this.lastUpdateTime = Date.now();
                 this.elapsedTime = this.currentTime-this.lastUpdateTime;
             }
             else
                //normal position
-               c.drawImage(this.spriteSheet,this.normalPositionWidth,this.normalPositionHeight,280,180,this.position.x-100,this.position.y-40,100,80);
+               c.drawImage(this.spriteSheet,this.normalPositionWidth,this.normalPositionHeight,280,180,this.position.x-70,this.position.y-40,100,80);
                this.swordDrawVar=false;
         }
         // Method to update the player position and velocity
@@ -180,7 +178,7 @@ courses: { compsci: {week: 7} }
         }
     }
     class Enemy {
-        constructor() {
+        constructor(image) {
             // Initial position and velocity of the enemy
             this.position = {
                 x: 500,
@@ -191,13 +189,13 @@ courses: { compsci: {week: 7} }
                 y: 0
             };
             // Dimensions of the enemy
+            this.image = image;
             this.width = 30;
             this.height = 30;
         }
         // Method to draw the enemy on the canvas
         draw() {
-            c.fillStyle = 'red';
-            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+            c.drawImage(this.image, this.position.x, this.position.y);
         }
         // Method to update the enemy position and velocity
         update() {
@@ -205,7 +203,7 @@ courses: { compsci: {week: 7} }
             this.position.y += this.velocity.y;
             this.position.x += this.velocity.x;
             // Apply gravity if enemy is not at the bottom
-            if (this.position.y + this.height + this.velocity.y <= canvas.height - 40)  /////////////////CHANGE BACK TO this.position.y + this.height + this.velocity.y <= canvas.height ONCE GAME DONE
+            if (this.position.y + this.height + this.velocity.y <= canvas.height - 35)  /////////////////CHANGE BACK TO this.position.y + this.height + this.velocity.y <= canvas.height ONCE GAME DONE
                 this.velocity.y += gravity;
             else
                 this.velocity.y = 0;
@@ -281,20 +279,19 @@ courses: { compsci: {week: 7} }
     }
     //healthpowerup
     class healthpowerup {
-        constructor() {
+        constructor(image) {
             // Initial position of the platform
             this.position = {
                 x: -100,
                 y: -100
             }
-            //this.image = image;
+            this.image = image;
             this.width = 25;
             this.height = 25;
         }
         // Method to draw the platform on the canvas
         draw() {
-            c.fillStyle = 'lime';
-            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+            c.drawImage(this.image, this.position.x, this.position.y);
         }
         update() {
             this.draw()
@@ -360,7 +357,6 @@ courses: { compsci: {week: 7} }
     let image = new Image();
     let imageTube = new Image();
     let imageBlock = new Image();
-    let imageHeart = new Image();
     //--
     // NEW CODE - ADD IMAGES FOR BACKGROUND
     //--
@@ -369,7 +365,6 @@ courses: { compsci: {week: 7} }
     image.src = 'https://samayass.github.io/samayaCSA/images/platform.png';
     imageTube.src = 'https://samayass.github.io/samayaCSA/images/tube.png';
     imageBlock.src = 'https://samayass.github.io/samayaCSA/images/box.png';
-    imageHeart.src = '{{site.baseurl}}/images/heart.jpg';
     //--
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
@@ -410,19 +405,19 @@ courses: { compsci: {week: 7} }
     } 
     player = new Player();
     lastUpdateTime = Date.now();
-    enemy1 = new Enemy();
+    enemy1 = new Enemy(imageEnemy);
     let enemyHealth1 = 3;
     enemy1.position.x = 800;
-    enemy2 = new Enemy();
+    enemy2 = new Enemy(imageEnemy);
     enemy2.position.x = 500;
     let enemyHealth2 = 3;
-    enemy3 = new Enemy();
+    enemy3 = new Enemy(imageEnemy);
     enemy3.position.x = 700;
     let enemyHealth3 = 3;
-    enemy4 = new Enemy();
+    enemy4 = new Enemy(imageEnemy);
     enemy4.position.x = 1000;
     let enemyHealth4 = 3;
-    enemy5 = new Enemy();
+    enemy5 = new Enemy(imageEnemy);
     enemy5.position.x = 1200;
     let enemyHealth5 = 3;
     sword = new Sword();
@@ -435,11 +430,11 @@ courses: { compsci: {week: 7} }
     heart3 = new Heart(imageHeart);
     heart3.position.x = 580;
     heart3.position.y = 40;
-    healthpowerup1 = new healthpowerup();
+    healthpowerup1 = new healthpowerup(imageHeart);
     healthpowerup1Enabled = false;
-    healthpowerup2 = new healthpowerup();
+    healthpowerup2 = new healthpowerup(imageHeart);
     healthpowerup2Enabled = false;
-    healthpowerup3 = new healthpowerup();
+    healthpowerup3 = new healthpowerup(imageHeart);
     healthpowerup3Enabled = false;
     border1 = new BlockObject();
     border1.position.x = 0;
@@ -449,6 +444,7 @@ courses: { compsci: {week: 7} }
     let pickupSound;
     let damageSound;
     let swordhitSound;
+    let swordhitSound2;
     let loseSound;
     let gameMusic;
     let ultReadySound;
@@ -466,8 +462,6 @@ courses: { compsci: {week: 7} }
     //Sounds
     attackSound = new sound("{{site.baseurl}}/images/swinging-staff-whoosh.mp3");
     pickupSound = new sound("{{site.baseurl}}/images/pickup.mp3");
-    damageSound = new sound("{{site.baseurl}}/images/ough.mp3");
-    swordhitSound = new sound("{{site.baseurl}}/images/sword-hit.mp3");
     loseSound = new sound("{{site.baseurl}}/images/lose-sound.wav");
     ultReadySound = new sound("{{site.baseurl}}/images/ultimate-ready.mp3");
     ultSound = new sound("{{site.baseurl}}/images/ultimate.mp3");
@@ -632,6 +626,7 @@ courses: { compsci: {week: 7} }
                     enemy.velocity.x = -12;
                     console.log("Contact Right");
                 }
+                damageSound = new sound("{{site.baseurl}}/images/ough.mp3");
                 damageSound.play();
                 if(lives == 3){
                     heart3.position.y = -45;
@@ -905,11 +900,19 @@ courses: { compsci: {week: 7} }
             console.log("Nothin");
         }
     }
+    function getDistance(x1, x2){
+        let x = x2 - x1;
+        return Math.sqrt(x*x);
+    }
     function respawnEnemy(enemy){
             enemy.position.x = Math.random() * ((border2.position.x - 100) - (border1.position.x+100)) + (border1.position.x+100);
             enemy.position.y = 200;
             enemy.velocity.x = 0;
             enemy.velocity.y = 0;
+            console.log(getDistance(enemy.position.x, player.position.x) < 100);
+            if(getDistance(enemy.position.x, player.position.x) < 100){
+                respawnEnemy(enemy);
+            }
         }
     addEventListener('keyup', ({ keyCode }) => {
         switch (keyCode) {
@@ -939,20 +942,20 @@ courses: { compsci: {week: 7} }
                     dmgDebounce = 50;
                     ultBlurDebounce = 40;
                     if(facing == false){
-                        checkLeftEnemy(enemy1);
-                        checkLeftEnemy(enemy2);
-                        checkLeftEnemy(enemy3);
-                        checkLeftEnemy(enemy4);
-                        checkLeftEnemy(enemy5);
+                        enemyHealth1 = checkLeftEnemy(enemy1,enemyHealth1);
+                        enemyHealth2 = checkLeftEnemy(enemy2,enemyHealth2);
+                        enemyHealth3 = checkLeftEnemy(enemy3,enemyHealth3);
+                        enemyHealth4 = checkLeftEnemy(enemy4,enemyHealth4);
+                        enemyHealth5 = checkLeftEnemy(enemy5,enemyHealth5);
                     }else if(facing == true){
-                        checkRightEnemy(enemy1);
-                        checkRightEnemy(enemy2);
-                        checkRightEnemy(enemy3);
-                        checkRightEnemy(enemy4);
-                        checkRightEnemy(enemy5);
+                        enemyHealth1 = checkRightEnemy(enemy1,enemyHealth1);
+                        enemyHealth2 = checkRightEnemy(enemy2,enemyHealth2);
+                        enemyHealth3 = checkRightEnemy(enemy3,enemyHealth3);
+                        enemyHealth4 = checkRightEnemy(enemy4,enemyHealth4);
+                        enemyHealth5 = checkRightEnemy(enemy5,enemyHealth5);
                     }
                 }
-                function checkRightEnemy(enemy){
+                function checkRightEnemy(enemy,enemyHealth){
                     if(enemy.position.x > player.position.x && enemy.position.y < 500){
                         enemyHealth = 0;
                         if(enemyHealth == 0){
@@ -962,8 +965,9 @@ courses: { compsci: {week: 7} }
                             score++;
                         }
                     }
+                    return enemyHealth;
                 }
-                function checkLeftEnemy(enemy){
+                function checkLeftEnemy(enemy,enemyHealth){
                     if(enemy.position.x < player.position.x && enemy.position.y < 500){
                         enemyHealth = 0;
                         if(enemyHealth == 0){
@@ -973,6 +977,7 @@ courses: { compsci: {week: 7} }
                             score++;
                         }
                     }
+                    return enemyHealth;
                 }
                 break;
             case 32:
@@ -988,7 +993,15 @@ courses: { compsci: {week: 7} }
                         enemy.velocity.y = -20;
                         enemy.velocity.x = -5;
                         enemyHealth--;
-                        swordhitSound.play();
+                        if(swordSound == 0){
+                            swordSound = 1;
+                            swordhitSound = new sound("{{site.baseurl}}/images/sword-hit.mp3");
+                            swordhitSound.play();
+                        }else{
+                            swordSound = 0;
+                            swordhitSound2 = new sound("{{site.baseurl}}/images/sword-hit.mp3");
+                            swordhitSound2.play();
+                        }
                         console.log(enemyHealth);
                         console.log(player.position.x + player.width/2 - enemy.position.x + enemy.width/2);
                         if(enemyHealth == 0){
@@ -1004,11 +1017,11 @@ courses: { compsci: {week: 7} }
                             score++;
                             if(score == 5){
                                 respawnEnemy(enemy2);
-                            }else if(score >= 15 && score < 17){
+                            }else if(score == 15){
                                 respawnEnemy(enemy3);
-                            }else if(score >= 25 && score < 28){
+                            }else if(score == 25){
                                 respawnEnemy(enemy4);
-                            }else if(score >= 50 && score < 54){
+                            }else if(score == 50){
                                 respawnEnemy(enemy5);
                             }
                         }
@@ -1016,7 +1029,15 @@ courses: { compsci: {week: 7} }
                         enemy.velocity.y = -20;
                         enemy.velocity.x = 5;
                         enemyHealth--;
-                        swordhitSound.play();
+                        if(swordSound == 0){
+                            swordSound = 1;
+                            swordhitSound = new sound("{{site.baseurl}}/images/sword-hit.mp3");
+                            swordhitSound.play();
+                        }else{
+                            swordSound = 0;
+                            swordhitSound2 = new sound("{{site.baseurl}}/images/sword-hit.mp3");
+                            swordhitSound2.play();
+                        }
                         console.log(enemyHealth);
                         console.log(enemy.position.x + enemy.width/2 - player.position.x + player.width/2);
                         if(enemyHealth == 0){
