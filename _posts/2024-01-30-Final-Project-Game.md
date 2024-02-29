@@ -187,6 +187,27 @@ courses: { compsci: {week: 7} }
             this.draw()
         }
     }
+    //healthpowerup
+    class healthpowerup {
+        constructor() {
+            // Initial position of the platform
+            this.position = {
+                x: 0,
+                y: 0
+            }
+            //this.image = image;
+            this.width = 25;
+            this.height = 25;
+        }
+        // Method to draw the platform on the canvas
+        draw() {
+            c.fillStyle = 'red';
+            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        }
+        update() {
+            this.draw()
+        }
+    }
     // Define the Tube class
     class Tube {
         constructor(image) {
@@ -252,6 +273,9 @@ courses: { compsci: {week: 7} }
     imageTube.src = 'https://samayass.github.io/samayaCSA/images/tube.png';
     imageBlock.src = 'https://samayass.github.io/samayaCSA/images/box.png';
     //--
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
     // NEW CODE - IMAGE URLS FOR BACKGROUND IMAGES
     //--
     imageBackground.src = 'https://samayass.github.io/samayaCSA/images/background.png';
@@ -312,10 +336,24 @@ courses: { compsci: {week: 7} }
     heart3 = new Heart();
     heart3.position.x = 580;
     heart3.position.y = 40;
+    healthpowerup1 = new healthpowerup();
+    healthpowerup1Enabled = false;
+    healthpowerup2 = new healthpowerup();
+    healthpowerup2Enabled = false;
+    healthpowerup3 = new healthpowerup();
+    healthpowerup3Enabled = false;
     var attackSound;
     let gameMusic;
     let musicPlayed = false;
     // Define keys and their states
+    let keys = {
+        right: {
+            pressed: false
+        },
+        left: {
+            pressed: false
+        }
+    };
     attackSound = new sound("{{site.baseurl}}/images/swinging-staff-whoosh.mp3");
     gameMusic = new sound('{{site.baseurl}}/images/Dragon-Castle.mp3');
     gameMusic.loop = true;
@@ -582,6 +620,14 @@ courses: { compsci: {week: 7} }
         }
     });
     // Event listener for key releases
+    function powerupAdd(){
+        const randNum = getRandomInt(2);
+        if(randNum == 1){
+            console.log("Add")
+        }else if(randNum == 0){
+            console.log("Nothin");
+        }
+    }
     addEventListener('keyup', ({ keyCode }) => {
         switch (keyCode) {
             case 65:
@@ -621,6 +667,7 @@ courses: { compsci: {week: 7} }
                             enemy.position.x = 500;
                             enemy.position.y = 200;
                             score++;
+                            powerupAdd()
                         }
                     }else if (facing == true && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 < 100 && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //right
                         enemy.velocity.y = -20;
@@ -633,6 +680,7 @@ courses: { compsci: {week: 7} }
                             enemy.position.x = 500;
                             enemy.position.y = 200;
                             score++;
+                            powerupAdd()
                         }
                     }
                     return enemyHealth;
