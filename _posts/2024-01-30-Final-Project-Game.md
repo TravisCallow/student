@@ -344,6 +344,9 @@ courses: { compsci: {week: 7} }
     healthpowerup3Enabled = false;
     let attackSound;
     let pickupSound;
+    let damageSound;
+    let swordhitSound;
+    let loseSound;
     let gameMusic;
     let musicPlayed = false;
     // Define keys and their states
@@ -357,6 +360,9 @@ courses: { compsci: {week: 7} }
     };
     attackSound = new sound("{{site.baseurl}}/images/swinging-staff-whoosh.mp3");
     pickupSound = new sound("{{site.baseurl}}/images/pickup.mp3");
+    damageSound = new sound("{{site.baseurl}}/images/ough.mp3");
+    swordhitSound = new sound("{{site.baseurl}}/images/sword-hit.mp3");
+    loseSound = new sound("{{site.baseurl}}/images/lose-sound.wav");
     gameMusic = new sound('{{site.baseurl}}/images/Dragon-Castle.mp3');
     gameMusic.loop = true;
     // Animation loop
@@ -490,12 +496,16 @@ courses: { compsci: {week: 7} }
                     console.log("Contact Right");
                 }
                 score--;
+                damageSound.play();
                 if(lives == 3){
                     heart3.position.y = -45;
                 }else if (lives == 2){
                     heart2.position.y = -45
                 }else if (lives == 1){
                     heart1.position.y = -45;
+                    loseSound.play();
+                    gameMusic.stop();
+                    gameMusic.currentTime = 0;
                     gamestarted = false;
                 }
                 lives--;
@@ -704,6 +714,7 @@ courses: { compsci: {week: 7} }
                         enemy.velocity.y = -20;
                         enemy.velocity.x = -5;
                         enemyHealth--;
+                        swordhitSound.play();
                         console.log(enemyHealth);
                         console.log(player.position.x + player.width/2 - enemy.position.x + enemy.width/2);
                         if(enemyHealth == 0){
@@ -717,6 +728,7 @@ courses: { compsci: {week: 7} }
                         enemy.velocity.y = -20;
                         enemy.velocity.x = 5;
                         enemyHealth--;
+                        swordhitSound.play();
                         console.log(enemyHealth);
                         console.log(enemy.position.x + enemy.width/2 - player.position.x + player.width/2);
                         if(enemyHealth == 0){
