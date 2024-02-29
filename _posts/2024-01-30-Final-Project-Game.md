@@ -447,7 +447,7 @@ courses: { compsci: {week: 7} }
                         healthpowerup1.position.y = 1000;
                         healthpowerup2.position.y = 1000;
                         healthpowerup3.position.y = 1000;
-                        ultPercentage = 90;
+                        ultPercentage = 0;
                         score = 0;
                         gameMusic.stop();
                         gameMusic.play();
