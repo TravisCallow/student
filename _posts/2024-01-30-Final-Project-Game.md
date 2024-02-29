@@ -59,6 +59,8 @@ courses: { compsci: {week: 7} }
     let ultPercentageInc = 20;
     let ultBind = "f";
     let ultBlurDebounce = 0;
+    //Menu debounce
+    let menuDebounce = 0;
     // Enemy Speed
     let enemySpeed = 0.25;
     let enemyCap = 3;
@@ -406,10 +408,13 @@ courses: { compsci: {week: 7} }
             c.fillText("Press SPACE to continue",canvas.width/2,200);
             c.fillText("Highscore: " + highscore,canvas.width/2,270);
             c.fillText("Score: " + score,canvas.width/2,300);
+            if(menuDebounce > 0){
+                menuDebounce--;
+            }
             addEventListener('keydown', ({ keyCode }) => {
                 switch (keyCode) {
                     case 32:
-                        if(gamestarted == false){
+                        if(gamestarted == false && menuDebounce == 0){
                         console.log('space');
                         gamestarted = true;
                         heart1.position.x = 500;
@@ -557,6 +562,7 @@ courses: { compsci: {week: 7} }
                         highscore = score;
                     }
                     gamestarted = false;
+                    menuDebounce = 100;
                 }
                 lives--;
             }
@@ -880,11 +886,11 @@ courses: { compsci: {week: 7} }
                             score++;
                             if(score == 5){
                                 respawnEnemy(enemy2);
-                            }else if(score == 15){
+                            }else if(score >= 15 && score < 17){
                                 respawnEnemy(enemy3);
-                            }else if(score == 25){
+                            }else if(score >= 25 && score < 28){
                                 respawnEnemy(enemy4);
-                            }else if(score == 50){
+                            }else if(score >= 50 && score < 54){
                                 respawnEnemy(enemy5);
                             }
                         }
