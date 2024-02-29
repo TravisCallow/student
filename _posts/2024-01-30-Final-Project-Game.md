@@ -192,8 +192,8 @@ courses: { compsci: {week: 7} }
         constructor() {
             // Initial position of the platform
             this.position = {
-                x: 0,
-                y: 0
+                x: -100,
+                y: -100
             }
             //this.image = image;
             this.width = 25;
@@ -201,7 +201,7 @@ courses: { compsci: {week: 7} }
         }
         // Method to draw the platform on the canvas
         draw() {
-            c.fillStyle = 'red';
+            c.fillStyle = 'lime';
             c.fillRect(this.position.x, this.position.y, this.width, this.height);
         }
         update() {
@@ -342,7 +342,8 @@ courses: { compsci: {week: 7} }
     healthpowerup2Enabled = false;
     healthpowerup3 = new healthpowerup();
     healthpowerup3Enabled = false;
-    var attackSound;
+    let attackSound;
+    let pickupSound;
     let gameMusic;
     let musicPlayed = false;
     // Define keys and their states
@@ -355,6 +356,7 @@ courses: { compsci: {week: 7} }
         }
     };
     attackSound = new sound("{{site.baseurl}}/images/swinging-staff-whoosh.mp3");
+    pickupSound = new sound("{{site.baseurl}}/images/pickup.mp3");
     gameMusic = new sound('{{site.baseurl}}/images/Dragon-Castle.mp3');
     gameMusic.loop = true;
     // Animation loop
@@ -430,6 +432,9 @@ courses: { compsci: {week: 7} }
         heart1.update();
         heart2.update();
         heart3.update();
+        healthpowerup1.update();
+        healthpowerup2.update();
+        healthpowerup3.update();
         //
         //Enemy AI
         enemyAI(enemy1);
@@ -495,6 +500,29 @@ courses: { compsci: {week: 7} }
                 }
                 lives--;
             }
+        }
+        healthpowerup1Enabled = healthCollision(healthpowerup1, healthpowerup1Enabled);
+        healthpowerup2Enabled = healthCollision(healthpowerup2, healthpowerup2Enabled);
+        healthpowerup3Enabled = healthCollision(healthpowerup3, healthpowerup3Enabled);
+        function healthCollision(healthP, healthPActive){
+            if(isColliding(player,healthP)){
+                if(lives < 3){
+                    pickupSound.play();
+                    if(lives == 2){
+                        healthP.position.y = -100;
+                        heart3.position.y = 40;
+                        healthPActive = false
+                    }else if(lives == 1){
+                        healthP.position.y = -100;
+                        heart2.position.y = 40;
+                        healthPActive = false
+                    }
+                    lives++;
+                }
+                console.log(lives);
+                console.log(healthPActive);
+            }
+            return healthPActive;
         }
         //Move sword;
         if(facing == true){
@@ -579,6 +607,9 @@ courses: { compsci: {week: 7} }
                 enemy3.position.x -= 5;
                 enemy4.position.x -= 5;
                 enemy5.position.x -= 5;
+                healthpowerup1.position.x -= 5;
+                healthpowerup2.position.x -= 5;
+                healthpowerup3.position.x -= 5;
             }
             else if (keys.left.pressed && !keys.right.pressed && genericObjects[0].position.x > 1000) {
                 genericObjects.forEach(genericObject => {
@@ -620,11 +651,24 @@ courses: { compsci: {week: 7} }
         }
     });
     // Event listener for key releases
-    function powerupAdd(){
+    function powerupAdd(enemyPosX, enemyPosY){
         const randNum = getRandomInt(2);
         if(randNum == 1){
             console.log("Add")
-        }else if(randNum == 0){
+            if (healthpowerup1Enabled == false){
+                healthpowerup1Enabled = true;
+                healthpowerup1.position.x = enemyPosX
+                healthpowerup1.position.y = enemyPosY
+            }else if (healthpowerup2Enabled == false){
+                healthpowerup2Enabled = true;
+                healthpowerup2.position.x = enemyPosX
+                healthpowerup2.position.y = enemyPosY
+            }else if (healthpowerup3Enabled == false){
+                healthpowerup3Enabled = true;
+                healthpowerup3.position.x = enemyPosX
+                healthpowerup3.position.y = enemyPosY
+            }
+        }else if(randNum <= 0){
             console.log("Nothin");
         }
     }
@@ -664,10 +708,10 @@ courses: { compsci: {week: 7} }
                         console.log(player.position.x + player.width/2 - enemy.position.x + enemy.width/2);
                         if(enemyHealth == 0){
                             enemyHealth = 3;
+                            powerupAdd(enemy.position.x, enemy.position.y);
                             enemy.position.x = 500;
                             enemy.position.y = 200;
                             score++;
-                            powerupAdd()
                         }
                     }else if (facing == true && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 < 100 && enemy.position.x + enemy.width/2 - player.position.x + player.width/2 > 0 && player.position.y + player.height/2 - 10 < enemy.position.y + enemy.height/2 && player.position.y + player.height/2 + 10 > enemy.position.y + enemy.height/2){ //right
                         enemy.velocity.y = -20;
@@ -677,10 +721,10 @@ courses: { compsci: {week: 7} }
                         console.log(enemy.position.x + enemy.width/2 - player.position.x + player.width/2);
                         if(enemyHealth == 0){
                             enemyHealth = 3;
+                            powerupAdd(enemy.position.x, enemy.position.y);
                             enemy.position.x = 500;
                             enemy.position.y = 200;
                             score++;
-                            powerupAdd()
                         }
                     }
                     return enemyHealth;
