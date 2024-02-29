@@ -45,6 +45,7 @@ courses: { compsci: {week: 7} }
     let gamestarted = false;
     // Score
     let score = 0;
+    let highscore = 0;
     // Spawn Location
     let pSpawnX = 100;
     let pSpawnY = 200;
@@ -381,6 +382,8 @@ courses: { compsci: {week: 7} }
             c.textAlign = "center";
             c.fillText("Welcome To Alex and Travis' Game",canvas.width/2,100);
             c.fillText("Press SPACE to continue",canvas.width/2,200);
+            c.fillText("Highscore: " + highscore,canvas.width/2,270);
+            c.fillText("Score: " + score,canvas.width/2,300);
             addEventListener('keydown', ({ keyCode }) => {
                 switch (keyCode) {
                     case 32:
@@ -495,7 +498,6 @@ courses: { compsci: {week: 7} }
                     enemy.velocity.x = -10;
                     console.log("Contact Right");
                 }
-                score--;
                 damageSound.play();
                 if(lives == 3){
                     heart3.position.y = -45;
@@ -506,6 +508,9 @@ courses: { compsci: {week: 7} }
                     loseSound.play();
                     gameMusic.stop();
                     gameMusic.currentTime = 0;
+                    if(score>highscore){
+                        highscore = score;
+                    }
                     gamestarted = false;
                 }
                 lives--;
