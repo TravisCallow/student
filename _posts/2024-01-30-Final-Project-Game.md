@@ -313,21 +313,16 @@ courses: { compsci: {week: 7} }
     heart3.position.x = 580;
     heart3.position.y = 40;
     var attackSound;
-    var gameMusic;
+    let gameMusic;
+    let musicPlayed = false;
     // Define keys and their states
-    let keys = {
-        right: {
-            pressed: false
-        },
-        left: {
-            pressed: false
-        }
-    };
+    attackSound = new sound("{{site.baseurl}}/images/swinging-staff-whoosh.mp3");
+    gameMusic = new sound('{{site.baseurl}}/images/Dragon-Castle.mp3');
+    gameMusic.loop = true;
     // Animation loop
     function animate() {
         requestAnimationFrame(animate);
         c.clearRect(0, 0, canvas.width, canvas.height);
-        attackSound = new sound("{{site.baseurl}}/images/swinging-staff-whoosh.mp3");
         if(gamestarted == false){
             c.beginPath();
             c.roundRect(50, 50, 550, 300,3);
@@ -366,6 +361,8 @@ courses: { compsci: {week: 7} }
                         enemy4.position.y = 1000;
                         enemy5.position.y = 1000;
                         score = 0;
+                        gameMusic.stop();
+                        gameMusic.play();
                         break;
                         }
                 }
