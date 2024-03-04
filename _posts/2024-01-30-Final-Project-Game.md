@@ -82,7 +82,7 @@ courses: { compsci: {week: 7} }
             // Dimensions of the player
             this.width = 20;
             this.height =30;
-            this.spriteSheet = new Image();
+            this.spriteSheet = new Image();            
             this.spriteSheet.src = "{{site.baseurl}}/images/Samurai_sprite-sheet.png"; 
             //"{{site.baseurl}}/images/Samurai_sprite-sheet.png
              // Animation properties
@@ -110,13 +110,29 @@ courses: { compsci: {week: 7} }
             this.spriteSheet.onerror = () => {
                 console.log("Error Loading Sprite Sheet");
             }
+             console.log("1s has not passed, keep sword drawen");
+                  this.swordDrawVer=true;
+                      //Define in the Player class
+                      this.counter = 500000;
+                      if(this.swordDrawVar)
+                      {
+                    c.drawImage();
+                     this.counter--;
+                     If (this.counter ==0)
+                    {
+	                this.counter = 500000; // modify this value to work for you
+	                this.swordDrawVar=false;
+	                }
+                    }else
+                    { 
+                    c.drawImage();
         }
         //set sword
-        swordDraw(swordDrawVar=false){
-            console.log("Set the swordDraw Variable");
-            this.swordDrawVar=swordDrawVar;
-            if(this.swordDrawVar)
-               this.currentTime=Date.now();
+        swordDraw(swordDrawVar=false)
+        console.log("Set the swordDraw Variable");
+        this.swordDrawVar=swordDrawVar;
+        if(this.swordDrawVar){
+           this.currentTime=Date.now();
         }
         //Draw Function
         draw() {
@@ -130,30 +146,28 @@ courses: { compsci: {week: 7} }
             // Scale the Sprite to 100W and 80H
             if (this.swordDrawVar){
                 console.log("Sword was Drawen");
-                this.elpasedTime=this.currentTime-lastUpdateTime;
+                //this.elpasedTime=this.currentTime-lastUpdateTime;
                 console.log("currenttime",this.currentTime);
                 console.log("lastUpdateTime",lastUpdateTime);
-                console.log("this.elapsedtime",this.elapsedTime);
+                //console.log("this.elapsedtime",this.elapsedTime);
                 if(this.elapsedTime >= 1000 ){
                     console.log("1s have passed");
                     this.swordDrawVar = false;
                     lastUpdateTime=Date.now();
-                }else{
-                        console.log("1s has not passed, keep sword drawen");
-                        this.swordDrawVer=true;
                 }
-            }
-            if(this.swordDrawVar ){
+            }   
+            if(this.swordDrawVar){
                 //fighting position
                 console.log("Draw Sword");
                 c.drawImage(this.spriteSheet,this.fightPositionWidth,this.fightPositionHeight,280,180,this.position.x-70,this.position.y-40,100,80);
                 this.lastUpdateTime = Date.now();
                 this.elapsedTime = this.currentTime-this.lastUpdateTime;
             }
-            else
+            else{
                //normal position
                c.drawImage(this.spriteSheet,this.normalPositionWidth,this.normalPositionHeight,280,180,this.position.x-70,this.position.y-40,100,80);
                this.swordDrawVar=false;
+            }
         }
         // Method to update the player position and velocity
         update() {
