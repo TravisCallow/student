@@ -882,7 +882,7 @@ courses: { compsci: {week: 7} }
                     return enemyHealth;
                 }
                 break;
-            case 32:
+            case 32: ///////////////FIX GAME OVER BUG TRAVIS YK WHAT IM TALKIN ABOUT.
                 console.log('space');
                 enemyHealth1 = enemyDamage(enemy1,enemyHealth1);
                 enemyHealth2 = enemyDamage(enemy2,enemyHealth2);
