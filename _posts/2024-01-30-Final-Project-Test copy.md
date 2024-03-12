@@ -90,10 +90,10 @@ courses: { compsci: {week: 7} }
             // Dimensions of the player
             this.width = 30;
             this.height = 30;
-        }
+            }
         // Method to draw the player on the canvas
         draw() {
-            c.fillStyle = 'yellow';
+            c.fillStyle = 'light green';
             c.fillRect(this.position.x, this.position.y, this.width, this.height);
         }
         // Method to update the player position and velocity
