@@ -109,7 +109,7 @@ courses: { compsci: {week: 7} }
         }
     }
     class Enemy {
-        constructor() {
+        constructor(image) {
             // Initial position and velocity of the enemy
             this.position = {
                 x: 500,
@@ -120,13 +120,13 @@ courses: { compsci: {week: 7} }
                 y: 0
             };
             // Dimensions of the enemy
+            this.image = image;
             this.width = 30;
             this.height = 30;
         }
         // Method to draw the enemy on the canvas
         draw() {
-            c.fillStyle = 'red';
-            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+            c.drawImage(this.image, this.position.x, this.position.y);
         }
         // Method to update the enemy position and velocity
         update() {
@@ -134,7 +134,7 @@ courses: { compsci: {week: 7} }
             this.position.y += this.velocity.y;
             this.position.x += this.velocity.x;
             // Apply gravity if enemy is not at the bottom
-            if (this.position.y + this.height + this.velocity.y <= canvas.height - 40)  /////////////////CHANGE BACK TO this.position.y + this.height + this.velocity.y <= canvas.height ONCE GAME DONE
+            if (this.position.y + this.height + this.velocity.y <= canvas.height - 35)  /////////////////CHANGE BACK TO this.position.y + this.height + this.velocity.y <= canvas.height ONCE GAME DONE
                 this.velocity.y += gravity;
             else
                 this.velocity.y = 0;
@@ -190,20 +190,19 @@ courses: { compsci: {week: 7} }
     }
     //hearts
     class Heart {
-        constructor() {
+        constructor(image) {
             // Initial position of the platform
             this.position = {
                 x: 0,
                 y: 0
             }
-            //this.image = image;
+            this.image = image;
             this.width = 25;
             this.height = 25;
         }
         // Method to draw the platform on the canvas
         draw() {
-            c.fillStyle = 'red';
-            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+            c.drawImage(this.image, this.position.x, this.position.y);
         }
         update() {
             this.draw()
@@ -211,20 +210,19 @@ courses: { compsci: {week: 7} }
     }
     //healthpowerup
     class healthpowerup {
-        constructor() {
+        constructor(image) {
             // Initial position of the platform
             this.position = {
                 x: -100,
                 y: -100
             }
-            //this.image = image;
+            this.image = image;
             this.width = 25;
             this.height = 25;
         }
         // Method to draw the platform on the canvas
         draw() {
-            c.fillStyle = 'lime';
-            c.fillRect(this.position.x, this.position.y, this.width, this.height);
+            c.drawImage(this.image, this.position.x, this.position.y);
         }
         update() {
             this.draw()
@@ -295,9 +293,13 @@ courses: { compsci: {week: 7} }
     //--
     let imageBackground = new Image();
     let imageHills = new Image();
+    let imageEnemy = new Image();
+    let imageHeart = new Image();
     image.src = 'https://samayass.github.io/samayaCSA/images/platform.png';
     imageTube.src = 'https://samayass.github.io/samayaCSA/images/tube.png';
     imageBlock.src = 'https://samayass.github.io/samayaCSA/images/box.png';
+    imageHeart.src = '{{site.baseurl}}/images/8bitheartfix-removebg-preview.png';
+    imageEnemy.src = '{{site.baseurl}}/images/8bitslime.png';
     //--
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
@@ -337,36 +339,36 @@ courses: { compsci: {week: 7} }
         }
     }
     player = new Player();
-    enemy1 = new Enemy();
+    enemy1 = new Enemy(imageEnemy);
     let enemyHealth1 = 3;
     enemy1.position.x = 800;
-    enemy2 = new Enemy();
+    enemy2 = new Enemy(imageEnemy);
     enemy2.position.x = 500;
     let enemyHealth2 = 3;
-    enemy3 = new Enemy();
+    enemy3 = new Enemy(imageEnemy);
     enemy3.position.x = 700;
     let enemyHealth3 = 3;
-    enemy4 = new Enemy();
+    enemy4 = new Enemy(imageEnemy);
     enemy4.position.x = 1000;
     let enemyHealth4 = 3;
-    enemy5 = new Enemy();
+    enemy5 = new Enemy(imageEnemy);
     enemy5.position.x = 1200;
     let enemyHealth5 = 3;
     sword = new Sword();
-    heart1 = new Heart();
+    heart1 = new Heart(imageHeart);
     heart1.position.x = 500;
     heart1.position.y = 40;
-    heart2 = new Heart();
+    heart2 = new Heart(imageHeart);
     heart2.position.x = 540;
     heart2.position.y = 40;
-    heart3 = new Heart();
+    heart3 = new Heart(imageHeart);
     heart3.position.x = 580;
     heart3.position.y = 40;
-    healthpowerup1 = new healthpowerup();
+    healthpowerup1 = new healthpowerup(imageHeart);
     healthpowerup1Enabled = false;
-    healthpowerup2 = new healthpowerup();
+    healthpowerup2 = new healthpowerup(imageHeart);
     healthpowerup2Enabled = false;
-    healthpowerup3 = new healthpowerup();
+    healthpowerup3 = new healthpowerup(imageHeart);
     healthpowerup3Enabled = false;
     border1 = new BlockObject();
     border1.position.x = 0;
@@ -832,18 +834,27 @@ courses: { compsci: {week: 7} }
                     ultPercentage = 0;
                     dmgDebounce = 50;
                     ultBlurDebounce = 40;
+                    if(score == 5){
+                        respawnEnemy(enemy2);
+                    }else if(score >= 15 && score < 27){
+                        respawnEnemy(enemy3);
+                    }else if(score >= 25 && score < 53){
+                        respawnEnemy(enemy4);
+                    }else if(score >= 50 && score < 55){
+                        respawnEnemy(enemy5);
+                    }
                     if(facing == false){
-                        checkLeftEnemy(enemy1);
-                        checkLeftEnemy(enemy2);
-                        checkLeftEnemy(enemy3);
-                        checkLeftEnemy(enemy4);
-                        checkLeftEnemy(enemy5);
+                        enemyHealth1 = checkLeftEnemy(enemy1,enemyHealth1);
+                        enemyHealth2 = checkLeftEnemy(enemy2,enemyHealth2);
+                        enemyHealth3 = checkLeftEnemy(enemy3,enemyHealth3);
+                        enemyHealth4 = checkLeftEnemy(enemy4,enemyHealth4);
+                        enemyHealth5 = checkLeftEnemy(enemy5,enemyHealth5);
                     }else if(facing == true){
-                        checkRightEnemy(enemy1);
-                        checkRightEnemy(enemy2);
-                        checkRightEnemy(enemy3);
-                        checkRightEnemy(enemy4);
-                        checkRightEnemy(enemy5);
+                        enemyHealth1 = checkRightEnemy(enemy1,enemyHealth1);
+                        enemyHealth2 = checkRightEnemy(enemy2,enemyHealth2);
+                        enemyHealth3 = checkRightEnemy(enemy3,enemyHealth3);
+                        enemyHealth4 = checkRightEnemy(enemy4,enemyHealth4);
+                        enemyHealth5 = checkRightEnemy(enemy5,enemyHealth5);
                     }
                 }
                 function checkRightEnemy(enemy){
@@ -856,6 +867,7 @@ courses: { compsci: {week: 7} }
                             score++;
                         }
                     }
+                    return enemyHealth;
                 }
                 function checkLeftEnemy(enemy){
                     if(enemy.position.x < player.position.x && enemy.position.y < 500){
@@ -867,9 +879,10 @@ courses: { compsci: {week: 7} }
                             score++;
                         }
                     }
+                    return enemyHealth;
                 }
                 break;
-            case 32:
+            case 32: ///////////////FIX GAME OVER BUG TRAVIS YK WHAT IM TALKIN ABOUT.
                 console.log('space');
                 enemyHealth1 = enemyDamage(enemy1,enemyHealth1);
                 enemyHealth2 = enemyDamage(enemy2,enemyHealth2);
@@ -904,11 +917,11 @@ courses: { compsci: {week: 7} }
                             score++;
                             if(score == 5){
                                 respawnEnemy(enemy2);
-                            }else if(score >= 15 && score < 17){
+                            }else if(score == 15){
                                 respawnEnemy(enemy3);
-                            }else if(score >= 25 && score < 28){
+                            }else if(score == 25){
                                 respawnEnemy(enemy4);
-                            }else if(score >= 50 && score < 54){
+                            }else if(score == 50){
                                 respawnEnemy(enemy5);
                             }
                         }
