@@ -2,7 +2,7 @@
 toc: false
 comments: false
 layout: post
-title: Week 7 Final Game
+title: Week 7 Final FINALGame
 description: Cool Game
 type: plans
 courses: { compsci: {week: 7} }
